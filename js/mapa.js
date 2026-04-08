@@ -61,7 +61,8 @@ if (!container) {
   const loader = new GLTFLoader();
   loader.load(
     "assets/peregrino.glb",
-    function (gltf) {
+    (gltf) => {
+      console.log("GLB carregado com sucesso", gltf);
       const root = gltf.scene;
       root.rotation.y = Math.PI;
       root.updateMatrixWorld(true);
@@ -78,12 +79,14 @@ if (!container) {
       scene.add(root);
       statusEl.remove();
     },
-    undefined,
-    function () {
+    (progress) => {
+      console.log("Progresso:", progress.loaded, "/", progress.total);
+    },
+    (error) => {
+      console.error("Erro ao carregar GLB:", error);
       statusEl.textContent =
         "Não foi possível carregar o Peregrino. Verifique se assets/peregrino.glb existe.";
       statusEl.classList.add("mapa-status--error");
-      console.error("Falha ao carregar assets/peregrino.glb");
     }
   );
 
