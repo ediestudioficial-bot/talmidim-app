@@ -23,96 +23,124 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      min-height: 100%;
-      min-height: 100dvh;
-    }
-
-    body {
-      font-family: "Montserrat", system-ui, sans-serif;
-      background-color: #0f2840;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .app-header {
-      background-color: #ffffff;
-      padding: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .app-header #logo {
-      max-width: 200px;
-      width: auto;
-      height: auto;
-      display: block;
-    }
-
-    #canvas-container {
-      width: 100%;
-      height: calc(100dvh - 160px);
-      position: relative;
-      overflow: hidden;
-    }
-
-    #canvas-container canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
-    }
-
-    .mapa-status {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1rem;
-      font-weight: 700;
-      color: #c8a84b;
-      background: rgba(15, 40, 64, 0.85);
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .mapa-status--error {
-      color: #ffb4a8;
-    }
-  </style>
+  <link rel="stylesheet" href="css/mapa.css">
 </head>
 <body>
   <header class="app-header" role="banner">
-    <img id="logo" src="assets/logo.png" alt="Talmidim" style="height:90px; width:auto; display:block; margin:0 auto;">
+    <img id="logo" src="assets/logo.png" alt="Talmidim">
   </header>
 
-  <div id="canvas-container" aria-label="Visualização 3D do Peregrino"></div>
+  <div id="mapa-container" role="application" aria-label="Mapa da jornada">
+    <img class="mapa-bg" src="assets/mapa.png" alt="Mapa da jornada do discipulado">
 
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
-    }
-  }
+    <div class="mapa-overlay-inferior" aria-hidden="true"></div>
+
+    <div class="mapa-markers">
+      <button
+        type="button"
+        class="mapa-marker mapa-marker--desbloqueada"
+        style="left:18%; top:58%"
+        data-nome="Estação 1: Intimidade com Deus"
+        aria-label="Estação 1: Intimidade com Deus, desbloqueada"
+      ></button>
+      <span
+        class="mapa-marker mapa-marker--bloqueada"
+        style="left:34%; top:52%"
+        role="presentation"
+        aria-hidden="true"
+      ></span>
+      <span
+        class="mapa-marker mapa-marker--bloqueada"
+        style="left:36%; top:66%"
+        role="presentation"
+        aria-hidden="true"
+      ></span>
+      <span
+        class="mapa-marker mapa-marker--bloqueada"
+        style="left:49%; top:68%"
+        role="presentation"
+        aria-hidden="true"
+      ></span>
+      <span
+        class="mapa-marker mapa-marker--bloqueada"
+        style="left:60%; top:58%"
+        role="presentation"
+        aria-hidden="true"
+      ></span>
+      <span
+        class="mapa-marker mapa-marker--bloqueada"
+        style="left:72%; top:42%"
+        role="presentation"
+        aria-hidden="true"
+      ></span>
+      <span
+        class="mapa-marker mapa-marker--bloqueada"
+        style="left:80%; top:60%"
+        role="presentation"
+        aria-hidden="true"
+      ></span>
+    </div>
+
+    <div class="mapa-card" id="mapa-card" role="dialog" aria-modal="true" aria-labelledby="mapa-card-titulo" hidden>
+      <button type="button" class="mapa-card-fechar" id="mapa-card-fechar" aria-label="Fechar">&times;</button>
+      <p class="mapa-card-titulo" id="mapa-card-titulo"></p>
+    </div>
+
+    <div class="mapa-painel">
+      <p class="mapa-badge">Dia 1 de 147 — Estação 1: Intimidade com Deus</p>
+      <button type="button" class="mapa-cta">Iniciar Jornada</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var card = document.getElementById("mapa-card");
+      var titulo = document.getElementById("mapa-card-titulo");
+      var fechar = document.getElementById("mapa-card-fechar");
+      var desbloqueados = document.querySelectorAll(".mapa-marker--desbloqueada");
+
+      function posicionarCard(el, marker) {
+        var r = marker.getBoundingClientRect();
+        var cx = r.left + r.width / 2;
+        var top = r.top - 12;
+        el.style.left = cx + "px";
+        el.style.top = top + "px";
+        el.style.transform = "translate(-50%, -100%)";
+      }
+
+      function abrirCard(marker) {
+        var nome = marker.getAttribute("data-nome") || "";
+        titulo.textContent = nome;
+        card.hidden = false;
+        posicionarCard(card, marker);
+      }
+
+      function fecharCard() {
+        card.hidden = true;
+        titulo.textContent = "";
+      }
+
+      desbloqueados.forEach(function (m) {
+        m.addEventListener("click", function () {
+          abrirCard(m);
+        });
+      });
+
+      fechar.addEventListener("click", fecharCard);
+
+      window.addEventListener("resize", function () {
+        if (!card.hidden && desbloqueados.length) {
+          posicionarCard(card, desbloqueados[0]);
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !card.hidden) {
+          fecharCard();
+        }
+      });
+    })();
   </script>
-
-  <script type="module" src="js/mapa.js"></script>
 
   <script>
     if ("serviceWorker" in navigator) {
