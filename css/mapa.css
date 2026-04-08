@@ -20,20 +20,19 @@ body {
 }
 
 .app-header {
-  background-color: #ffffff;
-  padding: 16px;
+  height: 90px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-bottom: 2px solid #c8a84b;
   flex-shrink: 0;
 }
 
 .app-header #logo {
-  max-width: 200px;
+  height: 70px;
   width: auto;
-  height: 90px;
   display: block;
-  margin: 0 auto;
 }
 
 #mapa-container {
@@ -97,14 +96,15 @@ body {
 }
 
 .mapa-marker--desbloqueada {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
+  background: #c8a84b;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(200, 168, 75, 0.7);
   cursor: pointer;
   opacity: 1;
-  box-shadow:
-    0 0 0 3px rgba(255, 255, 255, 0.45),
-    0 0 20px rgba(200, 168, 75, 0.85);
-  animation: mapa-pulse-atual 2s ease-in-out infinite;
+  animation: pulse-gold 1.5s ease-in-out infinite;
 }
 
 .mapa-marker--desbloqueada:focus-visible {
@@ -124,19 +124,15 @@ body {
   }
 }
 
-@keyframes mapa-pulse-atual {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    box-shadow:
-      0 0 0 3px rgba(255, 255, 255, 0.45),
-      0 0 20px rgba(200, 168, 75, 0.85);
+@keyframes pulse-gold {
+  0% {
+    box-shadow: 0 0 0 0 rgba(200, 168, 75, 0.7);
   }
-  50% {
-    transform: translate(-50%, -50%) scale(1.12);
-    box-shadow:
-      0 0 0 5px rgba(255, 255, 255, 0.35),
-      0 0 28px rgba(255, 220, 150, 0.95);
+  70% {
+    box-shadow: 0 0 0 12px rgba(200, 168, 75, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(200, 168, 75, 0);
   }
 }
 
