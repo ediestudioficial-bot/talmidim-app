@@ -10,6 +10,7 @@ const MIME = {
   '.json': 'application/json',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.glb': 'model/gltf-binary',
 };
 
 http.createServer((req, res) => {
