@@ -15,9 +15,14 @@ if (!container) {
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x0f2840);
-  // TODO: trocar por mapa.jpg (TextureLoader em assets/mapa.jpg como textura/fundo da cena)
 
-  const focusPoint = new THREE.Vector3(0, 1, 0);
+  const textureLoader = new THREE.TextureLoader();
+  textureLoader.load("assets/mapa.png", (texture) => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    scene.background = texture;
+  });
+
+  const focusPoint = new THREE.Vector3(0, 1.2, 0);
 
   const camera = new THREE.PerspectiveCamera(
     50,
@@ -25,7 +30,7 @@ if (!container) {
     0.1,
     1000
   );
-  camera.position.set(0, 1.5, 4);
+  camera.position.set(0, 2.5, 5);
   camera.lookAt(focusPoint);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
@@ -54,14 +59,6 @@ if (!container) {
   const hemi = new THREE.HemisphereLight(0x0f2840, 0xc8a84b, 0.4);
   scene.add(hemi);
 
-  const groundGeo = new THREE.PlaneGeometry(10, 10);
-  const groundMat = new THREE.MeshStandardMaterial({ color: 0x0a1f35 });
-  const ground = new THREE.Mesh(groundGeo, groundMat);
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.y = 0;
-  ground.receiveShadow = true;
-  scene.add(ground);
-
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.copy(focusPoint);
   controls.enableDamping = true;
@@ -72,6 +69,7 @@ if (!container) {
   controls.maxPolarAngle = 1.8;
   controls.minDistance = 2;
   controls.maxDistance = 12;
+  controls.enabled = false;
   controls.update();
 
   let characterRoot = null;
@@ -82,7 +80,7 @@ if (!container) {
     const dist = camera.position.distanceTo(focusPoint);
     const vFov = THREE.MathUtils.degToRad(camera.fov);
     const visibleHeight = 2 * Math.tan(vFov / 2) * dist;
-    const targetHeight = visibleHeight * 0.7;
+    const targetHeight = visibleHeight * 0.35;
     characterRoot.scale.setScalar(targetHeight / baseModelHeight);
   }
 
@@ -105,11 +103,7 @@ if (!container) {
       console.log("GLB carregado com sucesso", gltf);
       const root = gltf.scene;
       root.rotation.y = Math.PI;
-      root.updateMatrixWorld(true);
-
-      const box = new THREE.Box3().setFromObject(root);
-      const center = box.getCenter(new THREE.Vector3());
-      root.position.sub(center);
+      gltf.scene.position.set(-1.8, 0, 0);
       root.updateMatrixWorld(true);
 
       const boxSized = new THREE.Box3().setFromObject(root);
