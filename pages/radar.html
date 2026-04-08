@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#C8A84B">
+  <title>Radar Discipular — Talmidim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/radar.css">
+</head>
+<body class="radar-page">
+  <main class="radar-shell" role="main">
+    <section id="radar-intro" class="radar-card" aria-labelledby="radar-intro-titulo">
+      <h1 id="radar-intro-titulo" class="radar-titulo">Antes de continuar, pare por um instante</h1>
+      <p class="radar-texto">Aqui você não vai responder com base no que acredita.
+Nem no que pretende mudar.
+
+Você vai responder com base no que viveu.
+
+Olhe para os últimos 7 dias da sua vida.
+
+Sem ajustar respostas.
+Sem justificar.
+
+A verdade não condena.
+Mas revela.</p>
+      <button type="button" class="radar-btn" id="radar-intro-continuar">Continuar</button>
+    </section>
+
+    <section id="radar-quiz" class="radar-card" hidden aria-live="polite">
+      <p class="radar-progresso" id="radar-progresso"></p>
+      <p class="radar-area" id="radar-area"></p>
+      <p class="radar-pergunta" id="radar-pergunta-texto"></p>
+      <div class="radar-opcoes" id="radar-opcoes"></div>
+    </section>
+
+    <section id="radar-result" class="radar-card" hidden aria-labelledby="radar-result-titulo">
+      <h2 id="radar-result-titulo" class="radar-titulo">Essa é a realidade da sua vida com Deus hoje.</h2>
+      <p class="radar-texto">Você respondeu com base no que viveu.
+E isso revela onde sua vida realmente está.
+
+Isso não é um ponto final.
+É um ponto de partida.</p>
+      <button type="button" class="radar-btn" id="radar-result-continuar">Continuar</button>
+    </section>
+  </main>
+
+  <script src="../js/radar.js"></script>
+</body>
+</html>

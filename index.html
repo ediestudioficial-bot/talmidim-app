@@ -88,7 +88,7 @@
 
     <div class="mapa-painel">
       <p class="mapa-badge">Dia 1 de 147 — Estação 1: Intimidade com Deus</p>
-      <button type="button" class="mapa-cta">Iniciar Jornada</button>
+      <button type="button" class="mapa-cta" id="iniciar-jornada">Iniciar Jornada</button>
     </div>
   </div>
 
@@ -139,6 +139,13 @@
           fecharCard();
         }
       });
+
+      var btnJornada = document.getElementById("iniciar-jornada");
+      if (btnJornada) {
+        btnJornada.addEventListener("click", function () {
+          window.location.href = "/pages/radar.html";
+        });
+      }
     })();
   </script>
 

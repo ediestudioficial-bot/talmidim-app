@@ -1,0 +1,152 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  min-height: 100dvh;
+}
+
+body.radar-page {
+  font-family: "Montserrat", system-ui, sans-serif;
+  background-color: #0f2840;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+}
+
+.radar-shell {
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.radar-card {
+  background: rgba(15, 40, 64, 0.92);
+  border: 1px solid rgba(200, 168, 75, 0.35);
+  border-radius: 16px;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+}
+
+.radar-titulo {
+  font-size: clamp(1.15rem, 4vw, 1.45rem);
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  line-height: 1.35;
+  margin-bottom: 1.25rem;
+}
+
+.radar-texto {
+  font-size: clamp(0.9rem, 2.8vw, 1rem);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.65;
+  white-space: pre-line;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.radar-btn {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f2840;
+  background: #c8a84b;
+  border: none;
+  border-radius: 12px;
+  padding: 0.85rem 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(200, 168, 75, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.radar-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(200, 168, 75, 0.45);
+}
+
+.radar-btn:active {
+  transform: translateY(0);
+}
+
+.radar-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.radar-area {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #0f2840;
+  background: linear-gradient(135deg, #e8d491 0%, #c8a84b 55%, #a88b3d 100%);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  margin-bottom: 0.85rem;
+}
+
+.radar-pergunta {
+  font-size: clamp(1rem, 3.2vw, 1.12rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.radar-progresso {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #c8a84b;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.radar-opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.radar-opcao {
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-align: left;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(200, 168, 75, 0.4);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  line-height: 1.4;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.radar-opcao:hover {
+  background: rgba(200, 168, 75, 0.15);
+  border-color: #c8a84b;
+}
+
+.radar-opcao:active {
+  transform: scale(0.99);
+}
+
+.radar-opcao:focus-visible {
+  outline: 2px solid #c8a84b;
+  outline-offset: 2px;
+}

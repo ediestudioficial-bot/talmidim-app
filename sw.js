@@ -1,11 +1,14 @@
-const CACHE_NAME = "talmidim-v1";
+const CACHE_NAME = "talmidim-v2";
 
 const PRECACHE_URLS = [
   "./",
   "./index.html",
+  "./pages/radar.html",
   "./manifest.json",
   "./sw.js",
   "./css/mapa.css",
+  "./css/radar.css",
+  "./js/radar.js",
   "./assets/logo.png",
   "./assets/mapa.png",
   "./assets/icon-192.png",
