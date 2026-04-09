@@ -1,4 +1,4 @@
-const CACHE_NAME = "talmidim-v17";
+const CACHE_NAME = "talmidim-v18";
 
 const PRECACHE_URLS = [
   "./",
@@ -27,7 +27,7 @@ const PRECACHE_URLS = [
   "./js/mapa.js",
   "./js/jornada-dias.json",
   "./assets/logo.png",
-  "./assets/mapa.png",
+  "./assets/mapa-novo.png",
   "./assets/icon-192.png",
   "./assets/icon-512.png"
 ];
