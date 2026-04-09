@@ -14,10 +14,14 @@ html:has(body.mapa-page) body.mapa-page {
 }
 
 body.mapa-page {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  min-height: 100dvh;
   font-family: "Montserrat", system-ui, sans-serif;
   background-color: #0f2840;
   color: #fff;
-  min-height: 100dvh;
   opacity: 0;
   transition: opacity 0.5s ease;
 }
