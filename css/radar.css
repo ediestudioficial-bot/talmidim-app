@@ -28,21 +28,21 @@
   --radar-nav-mobile: 5.75rem;
 }
 
-/* Header editorial compacto (logo 40px) — radar.html */
+/* Header editorial compacto (logo 120px) — radar.html */
 body.radar-page--header-compact {
-  --radar-header-total: calc(0.85rem + 3.35rem);
+  --radar-header-total: calc(1rem + 120px + 0.9rem);
 }
 
 .radar-page--header-compact .radar-header-inner {
-  min-height: 3.35rem;
-  padding-top: 0.4rem;
-  padding-bottom: 0.4rem;
+  min-height: calc(120px + 0.85rem);
+  padding-top: 0.45rem;
+  padding-bottom: 0.45rem;
 }
 
 .radar-page--header-compact .radar-header-logo {
-  height: 40px;
+  height: 120px;
   width: auto;
-  max-width: 200px;
+  max-width: 420px;
 }
 
 @media (min-width: 768px) {
@@ -114,7 +114,7 @@ body.radar-page {
 }
 
 .radar-header-logo {
-  height: 112.5px;
+  height: 120px;
   width: auto;
   max-width: 525px;
   object-fit: contain;

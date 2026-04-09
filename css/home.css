@@ -20,7 +20,7 @@ body.talmidim-home {
 }
 
 .talmidim-home-logo #logo {
-  height: clamp(44px, 11vw, 56px);
+  height: 120px;
   width: auto;
   display: block;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
