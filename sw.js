@@ -1,4 +1,4 @@
-const CACHE_NAME = "talmidim-v16";
+const CACHE_NAME = "talmidim-v17";
 
 const PRECACHE_URLS = [
   "./",

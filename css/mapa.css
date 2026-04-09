@@ -4,17 +4,20 @@
   padding: 0;
 }
 
-html,
-body.mapa-page {
+html:has(body.mapa-page),
+html:has(body.mapa-page) body.mapa-page {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
   height: 100%;
-  min-height: 100dvh;
+  width: 100%;
 }
 
 body.mapa-page {
   font-family: "Montserrat", system-ui, sans-serif;
   background-color: #0f2840;
   color: #fff;
-  overflow: hidden;
+  min-height: 100dvh;
   opacity: 0;
   transition: opacity 0.5s ease;
 }
@@ -27,23 +30,21 @@ body.mapa-page.mapa-leave {
   opacity: 0;
 }
 
-/* Mapa em tela cheia — sem header / barra branca */
 #mapa-container {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  min-height: 100dvh;
+  position: relative;
+  width: 100vw;
+  height: 100dvh;
+  max-width: 100%;
   overflow: hidden;
 }
 
-/* Logo flutuante no topo */
+/* Logo sobre o mapa */
 .mapa-logo-float {
-  position: fixed;
+  position: absolute;
   top: max(0.75rem, env(safe-area-inset-top, 0px));
   left: 50%;
   transform: translateX(-50%);
-  z-index: 20;
+  z-index: 15;
   pointer-events: none;
 }
 
@@ -90,7 +91,8 @@ body.mapa-page.mapa-leave {
 
 .mapa-bg {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -205,19 +207,21 @@ body.mapa-page.mapa-leave {
 
 .mapa-painel {
   position: absolute;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  z-index: 10;
+  z-index: 20;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   gap: 0.85rem;
-  padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom, 0px));
-  background: rgba(15, 40, 64, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-top: 1px solid rgba(200, 168, 75, 0.25);
+  padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  background: rgba(15, 40, 64, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(200, 168, 75, 0.2);
 }
 
 .mapa-badge {
@@ -235,7 +239,8 @@ body.mapa-page.mapa-leave {
 }
 
 .mapa-ctx {
-  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
   text-align: center;
   font-size: clamp(0.7rem, 2.4vw, 0.8rem);
   font-weight: 600;
