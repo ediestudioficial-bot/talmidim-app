@@ -52,6 +52,30 @@ body {
   object-position: center;
   display: block;
   pointer-events: none;
+  transform-origin: center center;
+  animation: fade-entrada 1.5s ease-out forwards,
+    respirar-camera 8s ease-in-out 1.5s infinite;
+}
+
+@keyframes respirar-camera {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.04) translateY(-6px);
+  }
+}
+
+@keyframes fade-entrada {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .mapa-overlay-inferior {
@@ -212,6 +236,33 @@ body {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
   line-height: 1.35;
   max-width: 100%;
+}
+
+.mapa-ctx {
+  align-self: stretch;
+  text-align: center;
+  font-size: clamp(0.7rem, 2.4vw, 0.8rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.4;
+  padding: 0 0.25rem;
+}
+
+.mapa-ctx-line {
+  margin: 0 0 0.35rem;
+}
+
+.mapa-ctx-line:last-child {
+  margin-bottom: 0;
+}
+
+.mapa-ctx-line--acao {
+  font-weight: 500;
+  opacity: 0.9;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .mapa-cta {
