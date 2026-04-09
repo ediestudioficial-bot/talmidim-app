@@ -20,7 +20,7 @@ body.mapa-page {
   width: 100%;
   min-height: 100dvh;
   font-family: "Montserrat", system-ui, sans-serif;
-  background-color: #0f2840;
+  background-color: #000;
   color: #fff;
   opacity: 0;
   transition: opacity 0.5s ease;
@@ -42,13 +42,14 @@ body.mapa-page.mapa-leave {
   overflow: hidden;
 }
 
-/* Logo sobre o mapa */
+/* Logo — canto superior direito, sobre o mapa */
 .mapa-logo-float {
   position: absolute;
-  top: max(0.75rem, env(safe-area-inset-top, 0px));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 15;
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  right: calc(20px + env(safe-area-inset-right, 0px));
+  left: auto;
+  transform: none;
+  z-index: 20;
   pointer-events: none;
 }
 
@@ -56,7 +57,7 @@ body.mapa-page.mapa-leave {
   height: 120px;
   width: auto;
   display: block;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.5));
 }
 
 /* Respiração no fundo (wrapper — parallax no .mapa-bg via JS) */
@@ -219,25 +220,25 @@ body.mapa-page.mapa-leave {
   flex-direction: column;
   align-items: center;
   gap: 0.85rem;
-  padding: 16px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding: 30px 20px calc(24px + env(safe-area-inset-bottom, 0px));
   text-align: center;
-  background: rgba(15, 40, 64, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(200, 168, 75, 0.2);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .mapa-badge {
   align-self: center;
   text-align: center;
-  font-size: clamp(0.72rem, 2.8vw, 0.85rem);
+  font-size: 13px;
   font-weight: 700;
-  color: #0f2840;
-  background: linear-gradient(135deg, #e8d491 0%, #c8a84b 50%, #a88b3d 100%);
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  color: #c8a84b;
+  background: rgba(200, 168, 75, 0.2);
+  border: 1px solid rgba(200, 168, 75, 0.6);
+  padding: 6px 20px;
+  border-radius: 20px;
+  box-shadow: none;
   line-height: 1.35;
   max-width: 100%;
 }
@@ -248,7 +249,7 @@ body.mapa-page.mapa-leave {
   text-align: center;
   font-size: clamp(0.7rem, 2.4vw, 0.8rem);
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.4;
   padding: 0 0.25rem;
 }
@@ -263,7 +264,7 @@ body.mapa-page.mapa-leave {
 
 .mapa-ctx-line--acao {
   font-weight: 500;
-  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.85);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -273,21 +274,21 @@ body.mapa-page.mapa-leave {
 .mapa-cta {
   align-self: center;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 15px;
   font-weight: 700;
   color: #0f2840;
   background: #c8a84b;
   border: none;
-  border-radius: 10px;
-  padding: 0.75rem 1.75rem;
+  border-radius: 30px;
+  padding: 14px 40px;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(200, 168, 75, 0.35);
+  box-shadow: 0 0 30px rgba(200, 168, 75, 0.4);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .mapa-cta:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(200, 168, 75, 0.45);
+  box-shadow: 0 0 36px rgba(200, 168, 75, 0.5);
 }
 
 .mapa-cta:active {
