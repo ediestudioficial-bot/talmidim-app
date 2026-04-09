@@ -4,12 +4,12 @@
   var STORAGE_KEY = "talmidim_radar";
   var AREA_ORDER = [
     "Intimidade",
-    "Palavra",
-    "Oração",
-    "Comunhão",
-    "Evangelismo",
-    "Caráter",
+    "Família",
+    "Evangelização",
+    "Compaixão",
     "Mordomia",
+    "Serviço",
+    "Comunhão",
   ];
 
   var canvas = document.getElementById("radar-resultado-chart");
@@ -33,6 +33,46 @@
     } catch (e) {
       return null;
     }
+  }
+
+  /** Somas por área (0–15 cada), na ordem de AREA_ORDER — ex.: resultado.html?areas=10,8,12,9,11,7,14 */
+  function parseAreasFromUrl() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var raw = params.get("areas");
+      if (!raw) {
+        return null;
+      }
+      var parts = raw.split(",").map(function (x) {
+        return parseInt(String(x).trim(), 10);
+      });
+      if (parts.length !== AREA_ORDER.length) {
+        return null;
+      }
+      var maxSum = 5 * 3;
+      for (var i = 0; i < parts.length; i++) {
+        var n = parts[i];
+        if (!isFinite(n) || n < 0 || n > maxSum) {
+          return null;
+        }
+      }
+      return parts;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function areaDataFromSums(sums) {
+    var out = {};
+    AREA_ORDER.forEach(function (area, i) {
+      var sum = sums[i];
+      var media = sum / 5;
+      out[area] = {
+        media: media,
+        chart: (media / 3) * 100,
+      };
+    });
+    return out;
   }
 
   /** Por área: média 0–3 (interpretação) e 0–100 só para o gráfico. */
@@ -109,13 +149,14 @@
     drawTalmidimRadarChart(canvas, values, AREA_ORDER);
   }
 
-  var respostas = parseRespostas();
-  if (!respostas) {
+  var urlSums = parseAreasFromUrl();
+  var respostas = urlSums ? null : parseRespostas();
+  if (!urlSums && !respostas) {
     window.location.replace("radar.html");
     return;
   }
 
-  var areaData = computeAreaData(respostas);
+  var areaData = urlSums ? areaDataFromSums(urlSums) : computeAreaData(respostas);
   renderLista(areaData);
 
   function onResize() {

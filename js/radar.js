@@ -3,6 +3,19 @@
 
   const STORAGE_KEY = "talmidim_radar";
 
+  const AREA_ORDER = [
+    "Intimidade",
+    "Família",
+    "Evangelização",
+    "Compaixão",
+    "Mordomia",
+    "Serviço",
+    "Comunhão",
+  ];
+
+  const PERGUNTAS_POR_AREA = 5;
+  const NUM_AREAS = AREA_ORDER.length;
+
   /** Tempo para o destaque da opção antes da saída */
   const HIGHLIGHT_MS = 300;
   /** Ciclo completo: fade-out + fade-in (só opacity) */
@@ -18,41 +31,174 @@
   ];
 
   const perguntas = [
-    { area: "Intimidade", texto: "Nos últimos 7 dias, você separou tempo real para estar com Deus em oração?" },
-    { area: "Intimidade", texto: "Nos últimos 7 dias, você leu a Bíblia com atenção ou apenas abriu?" },
-    { area: "Intimidade", texto: "Nos últimos 7 dias, você sentiu sede de buscar a presença de Deus?" },
-    { area: "Intimidade", texto: "Nos últimos 7 dias, você confessou pecados e buscou um coração limpo?" },
-    { area: "Intimidade", texto: "Nos últimos 7 dias, a gratidão a Deus foi parte do seu dia a dia?" },
-    { area: "Palavra", texto: "Nos últimos 7 dias, você meditou no que leu nas Escrituras além do momento da leitura?" },
-    { area: "Palavra", texto: "Nos últimos 7 dias, a Palavra orientou alguma decisão sua?" },
-    { area: "Palavra", texto: "Nos últimos 7 dias, você memorizou ou revisitou um versículo com intenção?" },
-    { area: "Palavra", texto: "Nos últimos 7 dias, você estudou a Bíblia (não só leitura devocional rápida)?" },
-    { area: "Palavra", texto: "Nos últimos 7 dias, você compartilhou algo que aprendeu da Palavra com alguém?" },
-    { area: "Oração", texto: "Nos últimos 7 dias, você orou por outras pessoas pelo nome?" },
-    { area: "Oração", texto: "Nos últimos 7 dias, você esperou em Deus antes de agir por impulso?" },
-    { area: "Oração", texto: "Nos últimos 7 dias, houve momentos em que sua oração incluiu louvor e escuta, não só pedidos?" },
-    { area: "Oração", texto: "Nos últimos 7 dias, você buscou a vontade de Deus em algo concreto da sua vida?" },
-    { area: "Oração", texto: "Nos últimos 7 dias, você intercedeu por uma situação que não depende só de você?" },
-    { area: "Comunhão", texto: "Nos últimos 7 dias, você participou da vida da igreja (culto, célula ou encontro)?" },
-    { area: "Comunhão", texto: "Nos últimos 7 dias, você investiu em construir ou restaurar um relacionamento fraterno?" },
-    { area: "Comunhão", texto: "Nos últimos 7 dias, você perdoou ou pediu perdão a alguém da fé?" },
-    { area: "Comunhão", texto: "Nos últimos 7 dias, você serviu alguém da comunidade sem buscar reconhecimento?" },
-    { area: "Comunhão", texto: "Nos últimos 7 dias, você evitou fofoca ou julgamento sobre irmãos?" },
-    { area: "Evangelismo", texto: "Nos últimos 7 dias, você orou por pessoas que não conhecem a Cristo?" },
-    { area: "Evangelismo", texto: "Nos últimos 7 dias, você teve uma conversa sobre fé com alguém fora da igreja?" },
-    { area: "Evangelismo", texto: "Nos últimos 7 dias, você deu testemunho (com palavra ou atitude) de Jesus?" },
-    { area: "Evangelismo", texto: "Nos últimos 7 dias, você se importou de verdade com quem está longe de Deus?" },
-    { area: "Evangelismo", texto: "Nos últimos 7 dias, você deu um passo prático para cumprir a Grande Comissão?" },
-    { area: "Caráter", texto: "Nos últimos 7 dias, você resistiu à tentação recorrendo à graça (oração, Palavra ou fuga)?" },
-    { area: "Caráter", texto: "Nos últimos 7 dias, sua integridade foi provada (dinheiro, verdade ou compromissos)?" },
-    { area: "Caráter", texto: "Nos últimos 7 dias, você guardou os olhos e o coração do que desvia?" },
-    { area: "Caráter", texto: "Nos últimos 7 dias, você foi paciente e manso em situação difícil?" },
-    { area: "Caráter", texto: "Nos últimos 7 dias, você priorizou obediência a Deus em detrimento do próprio conforto?" },
-    { area: "Mordomia", texto: "Nos últimos 7 dias, você administrou tempo e recursos com consciência de que são de Deus?" },
-    { area: "Mordomia", texto: "Nos últimos 7 dias, você usou seus dons para edificar o Corpo de Cristo?" },
-    { area: "Mordomia", texto: "Nos últimos 7 dias, você cumpriu com responsabilidades que assumiu no serviço cristão?" },
-    { area: "Mordomia", texto: "Nos últimos 7 dias, você descansou tempo suficiente sem culpa indevida (como oferta a Deus)?" },
-    { area: "Mordomia", texto: "Nos últimos 7 dias, você alinhou planos futuros à direção de Deus em oração?" },
+    {
+      area: "Intimidade",
+      texto:
+        "Nos últimos 7 dias, você separou tempo real para estar com Deus em oração?",
+    },
+    {
+      area: "Intimidade",
+      texto: "Você leu a Bíblia de forma intencional esta semana?",
+    },
+    {
+      area: "Intimidade",
+      texto: "Você praticou algum tipo de jejum no último mês?",
+    },
+    {
+      area: "Intimidade",
+      texto:
+        "Você teve momentos de silêncio e escuta de Deus recentemente?",
+    },
+    {
+      area: "Intimidade",
+      texto:
+        "Sua vida de oração tem sido mais rotina ou encontro real?",
+    },
+    {
+      area: "Família",
+      texto:
+        "Você demonstrou amor ativo ao seu cônjuge ou família esta semana?",
+    },
+    {
+      area: "Família",
+      texto:
+        "Você resolveu algum conflito familiar com maturidade recentemente?",
+    },
+    {
+      area: "Família",
+      texto: "Sua família sente sua presença espiritual em casa?",
+    },
+    {
+      area: "Família",
+      texto: "Você orou com sua família nos últimos 7 dias?",
+    },
+    {
+      area: "Família",
+      texto: "Você pediu perdão a alguém da família quando errou?",
+    },
+    {
+      area: "Evangelização",
+      texto:
+        "Você compartilhou sua fé com alguém fora da igreja no último mês?",
+    },
+    {
+      area: "Evangelização",
+      texto:
+        "Você tem algum relacionamento intencional com não-cristãos?",
+    },
+    {
+      area: "Evangelização",
+      texto:
+        "Você orou por alguém específico para conhecer Jesus recentemente?",
+    },
+    {
+      area: "Evangelização",
+      texto:
+        "Você testemunhou da sua fé com palavras esta semana?",
+    },
+    {
+      area: "Evangelização",
+      texto:
+        "Você convidou alguém para a igreja ou um evento cristão recentemente?",
+    },
+    {
+      area: "Compaixão",
+      texto: "Você ajudou alguém em necessidade prática esta semana?",
+    },
+    {
+      area: "Compaixão",
+      texto:
+        "Você perdoou alguém que te magoou recentemente?",
+    },
+    {
+      area: "Compaixão",
+      texto:
+        "Você demonstrou misericórdia em vez de julgamento esta semana?",
+    },
+    {
+      area: "Compaixão",
+      texto:
+        "Você se importou com alguém marginalizado ou esquecido?",
+    },
+    {
+      area: "Compaixão",
+      texto:
+        "Você agiu com graça quando poderia ter reagido com dureza?",
+    },
+    {
+      area: "Mordomia",
+      texto:
+        "Você usou seu dinheiro de forma consciente e generosa esta semana?",
+    },
+    {
+      area: "Mordomia",
+      texto: "Você administrou bem seu tempo esta semana?",
+    },
+    {
+      area: "Mordomia",
+      texto:
+        "Você está usando seus dons espirituais de forma intencional?",
+    },
+    {
+      area: "Mordomia",
+      texto:
+        "Você cuidou do seu corpo como templo do Espírito?",
+    },
+    {
+      area: "Mordomia",
+      texto:
+        "Você devolveu o dízimo ou ofertas à obra de Deus?",
+    },
+    {
+      area: "Serviço",
+      texto:
+        "Você serviu na sua igreja ou comunidade esta semana?",
+    },
+    {
+      area: "Serviço",
+      texto:
+        "Você usou seus talentos para o bem de outros recentemente?",
+    },
+    {
+      area: "Serviço",
+      texto:
+        "Você está em algum ministério ou área de serviço ativo?",
+    },
+    {
+      area: "Serviço",
+      texto:
+        "Você ajudou alguém sem esperar reconhecimento?",
+    },
+    {
+      area: "Serviço",
+      texto:
+        "Você participou de alguma ação de impacto social recentemente?",
+    },
+    {
+      area: "Comunhão",
+      texto:
+        "Você teve comunhão real com outros cristãos esta semana?",
+    },
+    {
+      area: "Comunhão",
+      texto:
+        "Você tem alguém que acompanha sua vida espiritual?",
+    },
+    {
+      area: "Comunhão",
+      texto:
+        "Você foi honesto com alguém sobre suas lutas espirituais?",
+    },
+    {
+      area: "Comunhão",
+      texto:
+        "Você orou por outros membros da sua comunidade?",
+    },
+    {
+      area: "Comunhão",
+      texto:
+        "Você participou de algum grupo ou célula recentemente?",
+    },
   ];
 
   const elIntro = document.getElementById("radar-intro");
@@ -66,22 +212,30 @@
   const elDissolve = document.getElementById("radar-quiz-dissolve");
   const elProgressFill = document.getElementById("radar-progress-fill");
 
-  const TOTAL_SEGMENTS = 5;
-
   let indiceAtual = 0;
   const respostas = [];
   let quizLocked = false;
 
   function renderDots() {
     if (!elDots) return;
-    const n = TOTAL_SEGMENTS;
-    const step = perguntas.length / n;
-    const active = Math.min(n - 1, Math.floor(indiceAtual / step));
+    const areaIdx = Math.floor(indiceAtual / PERGUNTAS_POR_AREA);
+    const qInArea = indiceAtual % PERGUNTAS_POR_AREA;
     elDots.innerHTML = "";
-    for (let i = 0; i < n; i++) {
-      const dot = document.createElement("div");
-      dot.className = "radar-dot" + (i === active ? " radar-dot--active" : "");
-      elDots.appendChild(dot);
+    for (let a = 0; a < NUM_AREAS; a++) {
+      const cluster = document.createElement("div");
+      cluster.className = "radar-dot-cluster";
+      for (let d = 0; d < PERGUNTAS_POR_AREA; d++) {
+        const dot = document.createElement("div");
+        dot.className = "radar-dot";
+        if (a < areaIdx) {
+          dot.classList.add("radar-dot--completed");
+        } else if (a === areaIdx) {
+          if (d < qInArea) dot.classList.add("radar-dot--completed");
+          else if (d === qInArea) dot.classList.add("radar-dot--active");
+        }
+        cluster.appendChild(dot);
+      }
+      elDots.appendChild(cluster);
     }
   }
 
@@ -89,6 +243,23 @@
     if (!elProgressFill) return;
     const pct = ((indiceAtual + 1) / perguntas.length) * 100;
     elProgressFill.style.width = pct + "%";
+  }
+
+  function somasPorArea() {
+    return AREA_ORDER.map(function (area) {
+      return respostas
+        .filter(function (r) {
+          return r.area === area;
+        })
+        .reduce(function (s, r) {
+          return s + r.valor;
+        }, 0);
+    });
+  }
+
+  function urlResultadoComScores() {
+    const sums = somasPorArea();
+    return "resultado.html?areas=" + sums.join(",");
   }
 
   function persistir() {
@@ -150,9 +321,6 @@
     elDissolve.style.removeProperty("opacity");
   }
 
-  /**
-   * Conteúdo já está invisível (opacity 0). Dispara fade-in em 2 rAF.
-   */
   function iniciarFadeInDissolve() {
     if (!elDissolve) return;
     void elDissolve.offsetWidth;
@@ -170,9 +338,6 @@
     }, FADE_IN_MS);
   }
 
-  /**
-   * Primeira pergunta: começa invisível e entra com fade-in (sem trocar texto com opacity > 0).
-   */
   function renderPerguntaInicial() {
     prepararDissolveSemAnimacao();
     if (elDissolve) {
@@ -263,7 +428,7 @@
       try {
         localStorage.setItem("talmidim_radar_done", "true");
       } catch (e) {}
-      window.location.href = "radar-pausa.html";
+      window.location.href = urlResultadoComScores();
     }
   }
 
@@ -284,6 +449,8 @@
   });
 
   if (perguntas.length !== 35) {
-    console.warn("radar.js: esperadas 35 perguntas, encontradas " + perguntas.length);
+    console.warn(
+      "radar.js: esperadas 35 perguntas, encontradas " + perguntas.length
+    );
   }
 })();

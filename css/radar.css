@@ -28,6 +28,23 @@
   --radar-nav-mobile: 5.75rem;
 }
 
+/* Header editorial compacto (logo 40px) — radar.html */
+body.radar-page--header-compact {
+  --radar-header-total: calc(0.85rem + 3.35rem);
+}
+
+.radar-page--header-compact .radar-header-inner {
+  min-height: 3.35rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+.radar-page--header-compact .radar-header-logo {
+  height: 40px;
+  width: auto;
+  max-width: 200px;
+}
+
 @media (min-width: 768px) {
   :root {
     --radar-nav-mobile: 0px;
@@ -511,6 +528,42 @@ section#radar-quiz:not([hidden]).radar-flow {
 
 .radar-dot--active {
   width: 2rem;
+  background: #c8a84b;
+}
+
+/* Progresso: 7 grupos × 5 bolinhas (uma por pergunta da área) */
+.radar-dots--by-area {
+  flex-wrap: wrap;
+  gap: 0.45rem 0.55rem;
+  max-width: 22rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.radar-dot-cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.22rem;
+}
+
+.radar-dot-cluster .radar-dot {
+  width: 0.35rem;
+  height: 0.35rem;
+  min-width: 0.35rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: #e5e2d9;
+  transition: width 200ms ease, background 200ms ease, transform 200ms ease;
+}
+
+.radar-dot-cluster .radar-dot--completed {
+  background: #c8a84b;
+  opacity: 1;
+}
+
+.radar-dot-cluster .radar-dot--active {
+  width: 1.35rem;
+  height: 0.35rem;
   background: #c8a84b;
 }
 
