@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#fcf9ef">
+  <title>Jornada — Talmidim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/radar.css">
+  <link rel="stylesheet" href="../css/jornada.css">
+</head>
+<body class="radar-page jornada-page">
+  <header class="radar-header">
+    <div class="radar-header-inner">
+      <a href="mapa.html" class="radar-header-brand" aria-label="Talmidim — mapa da jornada">
+        <img class="radar-header-logo" src="../assets/logo.png" alt="Talmidim" width="525" height="150" decoding="async">
+      </a>
+      <span class="material-symbols-outlined radar-header-icon" aria-hidden="true">directions_walk</span>
+    </div>
+  </header>
+
+  <main class="jornada-main">
+    <div class="jornada-pdd" id="jornada-pdd" hidden></div>
+
+    <section class="jornada-hoje" id="jornada-hoje" hidden>
+      <p class="jornada-dia-label" id="jornada-dia-label"></p>
+
+      <div class="jornada-bloco">
+        <p class="jornada-rotulo">Confronto</p>
+        <p class="jornada-texto jornada-texto--confronto" id="jornada-confronto"></p>
+      </div>
+      <div class="jornada-bloco">
+        <p class="jornada-rotulo">Direção</p>
+        <p class="jornada-texto" id="jornada-direcao"></p>
+      </div>
+      <div class="jornada-bloco">
+        <p class="jornada-rotulo">Ação prática</p>
+        <p class="jornada-texto jornada-texto--acao" id="jornada-acao"></p>
+      </div>
+
+      <p class="jornada-compromisso" id="jornada-compromisso">
+        Você realmente fez isso?<br>
+        Sem adaptar. Sem pular partes.
+      </p>
+      <button type="button" class="jornada-btn" id="jornada-completar">Eu pratiquei isso hoje</button>
+    </section>
+
+    <section class="jornada-concluido" id="jornada-concluido" hidden>
+      <p class="jornada-concluido-frase jornada-concluido-frase--1">Isso não foi um desafio.</p>
+      <p class="jornada-concluido-frase jornada-concluido-frase--2">Foi um começo.</p>
+      <button type="button" class="jornada-btn jornada-btn--reiniciar" id="jornada-continuar-vivendo">Continuar vivendo isso</button>
+    </section>
+
+    <div id="jornada-mapa-wrap">
+      <p class="jornada-mapa-titulo" id="jornada-mapa-titulo">Seus dias</p>
+      <ul class="jornada-mapa" id="jornada-mapa" aria-label="Progresso recente da jornada"></ul>
+    </div>
+  </main>
+
+  <script src="../js/jornada.js"></script>
+</body>
+</html>

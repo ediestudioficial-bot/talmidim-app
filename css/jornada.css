@@ -1,0 +1,243 @@
+/* Jornada — um dia de cada vez */
+
+html:has(body.jornada-page) {
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+  overscroll-behavior: auto;
+}
+
+body.jornada-page {
+  height: auto;
+  min-height: 100%;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.jornada-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.jornada-main {
+  flex: 0 1 auto;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding-top: calc(var(--radar-header-total, 8.25rem) + 0.5rem);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+
+.jornada-pdd {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(196, 198, 206, 0.25);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #43474d;
+}
+
+.jornada-pdd strong {
+  color: #001326;
+  font-weight: 600;
+}
+
+.jornada-pdd.jornada-decisao-topo {
+  white-space: pre-line;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #001326;
+}
+
+.jornada-dia-label {
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5c5f66;
+  text-align: center;
+  margin: 0 0 1rem;
+}
+
+.jornada-bloco {
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid rgba(196, 198, 206, 0.2);
+  padding: 1.1rem 1.15rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 20px rgba(255, 224, 140, 0.05);
+}
+
+.jornada-bloco:last-of-type {
+  margin-bottom: 1rem;
+}
+
+.jornada-texto--acao {
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+.jornada-compromisso {
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #001326;
+  text-align: center;
+  margin: 0 0 0.85rem;
+}
+
+.jornada-rotulo {
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8b8e95;
+  margin: 0 0 0.45rem;
+}
+
+.jornada-texto {
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #1a1d21;
+  margin: 0;
+}
+
+.jornada-texto--confronto {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: #001326;
+}
+
+.jornada-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem 1.15rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  background: #f7f4e9;
+  color: #001326;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.jornada-btn:hover:not(:disabled) {
+  background: #edd891;
+}
+
+.jornada-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.jornada-concluido {
+  text-align: center;
+  padding: 1.5rem 0.5rem 0.5rem;
+}
+
+.jornada-concluido-frase {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  color: #001326;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.jornada-concluido-frase--1 {
+  font-size: 1.38rem;
+  margin-bottom: 0.35rem;
+}
+
+.jornada-concluido-frase--2 {
+  font-size: 1.12rem;
+  margin-bottom: 1.5rem;
+  color: #2a2d32;
+}
+
+.jornada-btn--reiniciar {
+  max-width: 20rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.jornada-mapa-titulo {
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5c5f66;
+  margin: 1.75rem 0 0.65rem;
+}
+
+.jornada-mapa {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.jornada-mapa-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.5rem;
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.82rem;
+  border: 1px solid rgba(196, 198, 206, 0.35);
+  background: rgba(255, 255, 255, 0.5);
+  color: #6b6e75;
+}
+
+.jornada-mapa-item--done {
+  background: rgba(200, 168, 75, 0.08);
+  border-color: rgba(200, 168, 75, 0.25);
+  color: #43474d;
+}
+
+.jornada-mapa-item--current {
+  border-color: #c8a84b;
+  background: rgba(200, 168, 75, 0.12);
+  color: #001326;
+  font-weight: 600;
+}
+
+.jornada-mapa-item--locked {
+  opacity: 0.5;
+}
+
+.jornada-mapa-item .jornada-mapa-ico {
+  font-size: 0.65rem;
+  width: 1.25rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.jornada-hoje[hidden],
+.jornada-concluido[hidden] {
+  display: none !important;
+}

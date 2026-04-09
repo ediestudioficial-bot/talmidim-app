@@ -1,0 +1,213 @@
+/* PDD — Plano de Decisão Discipular: fluxo em duas etapas */
+
+html:has(body.pdd-page) {
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+  overscroll-behavior: auto;
+}
+
+body.pdd-page {
+  height: auto;
+  min-height: 100%;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pdd-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pdd-page-title {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.2rem, 4vw, 1.55rem);
+  line-height: 1.25;
+  color: #001326;
+  text-align: center;
+  margin: 0 0 0.75rem;
+}
+
+.pdd-mensagem-topo {
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: clamp(0.9rem, 2.8vw, 1.02rem);
+  font-weight: 500;
+  line-height: 1.55;
+  color: #001326;
+  text-align: center;
+  margin: 0 auto 1.35rem;
+  white-space: pre-line;
+  max-width: 22rem;
+}
+
+.pdd-main {
+  flex: 0 1 auto;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+  min-height: auto;
+  overflow: visible;
+  padding-top: calc(var(--radar-header-total, 8.25rem) + 0.5rem);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+
+.pdd-step[hidden] {
+  display: none !important;
+}
+
+.pdd-lead {
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a1d21;
+  text-align: center;
+  line-height: 1.45;
+  margin: 0 0 1.25rem;
+}
+
+.pdd-areas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.pdd-area-card {
+  width: 100%;
+  display: block;
+  text-align: left;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(196, 198, 206, 0.35);
+  background: #ffffff;
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #43474d;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pdd-area-card:hover {
+  border-color: rgba(200, 168, 75, 0.45);
+}
+
+.pdd-area-card:focus-visible {
+  outline: 2px solid #745b00;
+  outline-offset: 2px;
+}
+
+.pdd-area-card.is-selected {
+  border-color: #c8a84b;
+  background: rgba(200, 168, 75, 0.08);
+  box-shadow: 0 0 0 1px rgba(200, 168, 75, 0.2);
+  color: #001326;
+}
+
+.pdd-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pdd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.95rem 1.15rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  background: #f7f4e9;
+  color: #001326;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.pdd-btn:hover:not(:disabled) {
+  background: #edd891;
+}
+
+.pdd-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pdd-step2-title {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 3.8vw, 1.45rem);
+  line-height: 1.3;
+  color: #001326;
+  text-align: center;
+  margin: 0 0 1.25rem;
+}
+
+.pdd-field {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(196, 198, 206, 0.45);
+  background: #ffffff;
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: #1a1d21;
+  min-height: 3rem;
+}
+
+.pdd-btn--ghost {
+  background: transparent !important;
+  border: 1px solid rgba(196, 198, 206, 0.5) !important;
+}
+
+.pdd-btn--ghost:hover:not(:disabled) {
+  background: rgba(0, 19, 38, 0.04) !important;
+}
+
+.pdd-field::placeholder {
+  color: #8b8e95;
+}
+
+.pdd-field:focus {
+  outline: none;
+  border-color: rgba(200, 168, 75, 0.65);
+  box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.12);
+}
+
+.pdd-hint {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #6b6e75;
+  opacity: 0.85;
+}

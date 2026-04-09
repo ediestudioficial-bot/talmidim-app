@@ -5,42 +5,87 @@
 }
 
 html,
-body {
-  min-height: 100%;
+body.mapa-page {
+  height: 100%;
   min-height: 100dvh;
 }
 
-body {
+body.mapa-page {
   font-family: "Montserrat", system-ui, sans-serif;
   background-color: #0f2840;
   color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.app-header {
-  height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
-  border-bottom: 2px solid #c8a84b;
-  flex-shrink: 0;
+body.mapa-page.mapa-ready {
+  opacity: 1;
 }
 
-.app-header #logo {
-  height: 70px;
+body.mapa-page.mapa-leave {
+  opacity: 0;
+}
+
+/* Mapa em tela cheia — sem header / barra branca */
+#mapa-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+/* Logo flutuante no topo */
+.mapa-logo-float {
+  position: fixed;
+  top: max(0.75rem, env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.mapa-logo-float img {
+  height: clamp(44px, 11vw, 56px);
   width: auto;
   display: block;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
 }
 
-#mapa-container {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  overflow: hidden;
+/* Respiração no fundo (wrapper — parallax no .mapa-bg via JS) */
+.mapa-live-wrap {
+  position: absolute;
+  inset: 0;
+  animation: mapa-fade-entrada 1.2s ease-out forwards;
+  transform-origin: center center;
+}
+
+.mapa-live-breathe {
+  position: absolute;
+  inset: 0;
+  animation: respirar-camera 8s ease-in-out 1.2s infinite;
+  transform-origin: center center;
+}
+
+@keyframes mapa-fade-entrada {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes respirar-camera {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.04) translateY(-4px);
+  }
 }
 
 .mapa-bg {
@@ -53,51 +98,41 @@ body {
   display: block;
   pointer-events: none;
   transform-origin: center center;
-  animation: fade-entrada 1.5s ease-out forwards,
-    respirar-camera 8s ease-in-out 1.5s infinite;
+  will-change: transform;
 }
 
-@keyframes respirar-camera {
-  0%,
-  100% {
-    transform: scale(1) translateY(0);
-  }
-  50% {
-    transform: scale(1.04) translateY(-6px);
-  }
-}
-
-@keyframes fade-entrada {
-  from {
-    opacity: 0;
-    transform: scale(1.08);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.mapa-overlay-inferior {
+/* Névoa dourada no horizonte superior */
+#nevoa {
   position: absolute;
+  top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  height: 55%;
+  width: 100%;
+  height: 45%;
+  z-index: 3;
   pointer-events: none;
   background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.5) 0%,
-    rgba(0, 0, 0, 0.15) 45%,
+    to bottom,
+    rgba(255, 220, 150, 0.14) 0%,
     transparent 100%
   );
-  z-index: 1;
+  animation: nevoa-pulsa 6s ease-in-out infinite;
+}
+
+@keyframes nevoa-pulsa {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .mapa-markers {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 4;
+  pointer-events: none;
 }
 
 .mapa-marker {
@@ -107,15 +142,23 @@ body {
   background: #c8a84b;
   border-radius: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+.mapa-marker--feita {
+  width: 11px;
+  height: 11px;
+  opacity: 0.75;
+  box-shadow: 0 0 4px rgba(200, 168, 75, 0.4);
   cursor: default;
-  z-index: 3;
 }
 
 .mapa-marker--bloqueada {
   width: 10px;
   height: 10px;
-  opacity: 0.45;
+  opacity: 0.5;
   box-shadow: 0 0 6px rgba(200, 168, 75, 0.35);
+  cursor: default;
   animation: mapa-pulse-suave 2.2s ease-in-out infinite;
 }
 
@@ -160,53 +203,6 @@ body {
   }
 }
 
-.mapa-card {
-  position: fixed;
-  z-index: 50;
-  min-width: 200px;
-  max-width: min(90vw, 320px);
-  padding: 0.85rem 1.1rem;
-  background: rgba(15, 40, 64, 0.95);
-  border: 2px solid #c8a84b;
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 700;
-  line-height: 1.35;
-  pointer-events: auto;
-}
-
-.mapa-card[hidden] {
-  display: none !important;
-}
-
-.mapa-card-fechar {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: #c8a84b;
-  font-size: 1.35rem;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mapa-card-fechar:hover {
-  background: rgba(200, 168, 75, 0.15);
-}
-
-.mapa-card-titulo {
-  padding-right: 1.75rem;
-}
-
 .mapa-painel {
   position: absolute;
   left: 0;
@@ -218,7 +214,7 @@ body {
   align-items: stretch;
   gap: 0.85rem;
   padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom, 0px));
-  background: rgba(15, 40, 64, 0.85);
+  background: rgba(15, 40, 64, 0.88);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid rgba(200, 168, 75, 0.25);

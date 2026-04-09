@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#fcf9ef">
+  <title>Plano de Decisão Discipular | Talmidim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/radar.css">
+  <link rel="stylesheet" href="../css/pdd.css">
+</head>
+<body class="radar-page pdd-page">
+  <header class="radar-header">
+    <div class="radar-header-inner">
+      <a href="../index.html" class="radar-header-brand" aria-label="Talmidim — início">
+        <img class="radar-header-logo" src="../assets/logo.png" alt="Talmidim" width="525" height="150" decoding="async">
+      </a>
+      <span class="material-symbols-outlined radar-header-icon" aria-hidden="true">edit_note</span>
+    </div>
+  </header>
+
+  <main class="pdd-main">
+    <p class="pdd-mensagem-topo" id="pdd-mensagem-topo">Você não precisa mudar tudo.
+
+Mas precisa começar por algo real.</p>
+
+    <section id="pdd-step1" class="pdd-step" aria-labelledby="pdd-step1-title">
+      <h1 id="pdd-step1-title" class="pdd-page-title">Plano de Decisão Discipular</h1>
+      <p class="pdd-lead">Escolha <strong>uma</strong> área em que você vai investir com intenção nesta temporada.</p>
+
+      <ul class="pdd-areas" id="pdd-areas"></ul>
+
+      <div class="pdd-actions">
+        <button type="button" class="pdd-btn" id="pdd-btn-step1" disabled>Continuar</button>
+      </div>
+    </section>
+
+    <section id="pdd-step2" class="pdd-step" hidden aria-labelledby="pdd-step2-title">
+      <h2 id="pdd-step2-title" class="pdd-step2-title">O que você vai começar a fazer, de forma prática?</h2>
+
+      <label class="visually-hidden" for="pdd-acao">Sua ação prática</label>
+      <input
+        type="text"
+        id="pdd-acao"
+        class="pdd-field"
+        name="acao"
+        autocomplete="off"
+        maxlength="500"
+        placeholder="Ex: Orar 10 minutos todos os dias pela manhã"
+      >
+      <p class="pdd-hint" id="pdd-acao-hint">Mínimo de 10 caracteres.</p>
+
+      <div class="pdd-actions">
+        <button type="button" class="pdd-btn" id="pdd-btn-step2" disabled>Continuar jornada</button>
+        <button type="button" class="pdd-btn pdd-btn--ghost" id="pdd-btn-voltar">Voltar</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/pdd.js"></script>
+</body>
+</html>

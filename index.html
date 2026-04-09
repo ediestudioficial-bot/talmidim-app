@@ -22,129 +22,70 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/mapa.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/home.css">
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("talmidim_radar_done") !== "true") {
+          window.location.replace("pages/radar.html");
+        }
+      } catch (e) {
+        window.location.replace("pages/radar.html");
+      }
+    })();
+  </script>
 </head>
-<body>
-  <header class="app-header" role="banner">
+<body class="talmidim-home">
+  <div class="talmidim-home-logo" role="banner">
     <img id="logo" src="assets/logo.png" alt="Talmidim">
-  </header>
-
-  <div id="mapa-container" role="application" aria-label="Mapa da jornada">
-    <img class="mapa-bg" src="assets/mapa.png" alt="Mapa da jornada do discipulado">
-
-    <div class="mapa-overlay-inferior" aria-hidden="true"></div>
-
-    <div class="mapa-markers">
-      <button
-        type="button"
-        class="mapa-marker mapa-marker--desbloqueada"
-        style="left:18%; top:58%"
-        data-nome="Estação 1: Intimidade com Deus"
-        aria-label="Estação 1: Intimidade com Deus, desbloqueada"
-      ></button>
-      <span
-        class="mapa-marker mapa-marker--bloqueada"
-        style="left:34%; top:52%"
-        role="presentation"
-        aria-hidden="true"
-      ></span>
-      <span
-        class="mapa-marker mapa-marker--bloqueada"
-        style="left:36%; top:66%"
-        role="presentation"
-        aria-hidden="true"
-      ></span>
-      <span
-        class="mapa-marker mapa-marker--bloqueada"
-        style="left:49%; top:68%"
-        role="presentation"
-        aria-hidden="true"
-      ></span>
-      <span
-        class="mapa-marker mapa-marker--bloqueada"
-        style="left:60%; top:58%"
-        role="presentation"
-        aria-hidden="true"
-      ></span>
-      <span
-        class="mapa-marker mapa-marker--bloqueada"
-        style="left:72%; top:42%"
-        role="presentation"
-        aria-hidden="true"
-      ></span>
-      <span
-        class="mapa-marker mapa-marker--bloqueada"
-        style="left:80%; top:60%"
-        role="presentation"
-        aria-hidden="true"
-      ></span>
-    </div>
-
-    <div class="mapa-card" id="mapa-card" role="dialog" aria-modal="true" aria-labelledby="mapa-card-titulo" hidden>
-      <button type="button" class="mapa-card-fechar" id="mapa-card-fechar" aria-label="Fechar">&times;</button>
-      <p class="mapa-card-titulo" id="mapa-card-titulo"></p>
-    </div>
-
-    <div class="mapa-painel">
-      <p class="mapa-badge">Dia 1 de 147 — Estação 1: Intimidade com Deus</p>
-      <button type="button" class="mapa-cta" id="iniciar-jornada">Iniciar Jornada</button>
-    </div>
   </div>
+
+  <main class="talmidim-home-main">
+    <p class="talmidim-home-resumo" id="talmidim-home-resumo"></p>
+    <a class="talmidim-home-cta" href="pages/mapa.html">Abrir mapa da jornada</a>
+  </main>
 
   <script>
     (function () {
-      var card = document.getElementById("mapa-card");
-      var titulo = document.getElementById("mapa-card-titulo");
-      var fechar = document.getElementById("mapa-card-fechar");
-      var desbloqueados = document.querySelectorAll(".mapa-marker--desbloqueada");
-
-      function posicionarCard(el, marker) {
-        var r = marker.getBoundingClientRect();
-        var cx = r.left + r.width / 2;
-        var top = r.top - 12;
-        el.style.left = cx + "px";
-        el.style.top = top + "px";
-        el.style.transform = "translate(-50%, -100%)";
+      var el = document.getElementById("talmidim-home-resumo");
+      if (!el) {
+        return;
       }
-
-      function abrirCard(marker) {
-        var nome = marker.getAttribute("data-nome") || "";
-        titulo.textContent = nome;
-        card.hidden = false;
-        posicionarCard(card, marker);
-      }
-
-      function fecharCard() {
-        card.hidden = true;
-        titulo.textContent = "";
-      }
-
-      desbloqueados.forEach(function (m) {
-        m.addEventListener("click", function () {
-          abrirCard(m);
-        });
-      });
-
-      fechar.addEventListener("click", fecharCard);
-
-      window.addEventListener("resize", function () {
-        if (!card.hidden && desbloqueados.length) {
-          posicionarCard(card, desbloqueados[0]);
+      var pdd = null;
+      var j = null;
+      try {
+        var pr = localStorage.getItem("talmidim_pdd");
+        if (pr) {
+          pdd = JSON.parse(pr);
         }
-      });
-
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && !card.hidden) {
-          fecharCard();
+      } catch (e) {}
+      try {
+        var jr = localStorage.getItem("talmidim_jornada");
+        if (jr) {
+          j = JSON.parse(jr);
         }
-      });
-
-      var btnJornada = document.getElementById("iniciar-jornada");
-      if (btnJornada) {
-        btnJornada.addEventListener("click", function () {
-          window.location.href = "/pages/radar.html";
-        });
+      } catch (e) {}
+      var dia = 1;
+      if (j && typeof j.diaAtual === "number" && j.diaAtual >= 1) {
+        dia = j.diaAtual;
+      }
+      var temPdd =
+        pdd && typeof pdd.area === "string" && typeof pdd.acao === "string";
+      if (dia > 47) {
+        el.textContent =
+          "Sua sequência de 47 dias está completa. O mapa mostra toda a trilha.";
+      } else if (temPdd) {
+        el.textContent =
+          "Dia " +
+          dia +
+          " de 47 · " +
+          pdd.area +
+          " — " +
+          (pdd.acao.length > 80 ? pdd.acao.slice(0, 77) + "…" : pdd.acao);
+      } else {
+        el.textContent =
+          "Sua jornada acontece no mapa: um passo por dia, com clareza.";
       }
     })();
   </script>

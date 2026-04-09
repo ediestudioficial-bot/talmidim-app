@@ -1,0 +1,44 @@
+/* Pausa silenciosa após o Radar — sem rolagem, texto central */
+
+html:has(body.radar-pausa-page) {
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+}
+
+body.radar-pausa-page {
+  height: auto;
+  min-height: 100%;
+  max-height: none;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.radar-pausa-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: calc(var(--radar-header-total, 8.25rem) + 2rem) 1.5rem 3rem;
+  box-sizing: border-box;
+  max-width: 22rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.radar-pausa-texto {
+  font-family: "Newsreader", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 4vw, 1.45rem);
+  line-height: 1.45;
+  color: #001326;
+  margin: 0 0 1rem;
+}
+
+.radar-pausa-texto:last-child {
+  margin-bottom: 0;
+}

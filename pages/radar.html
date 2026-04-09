@@ -3,18 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#C8A84B">
+  <meta name="theme-color" content="#fcf9ef">
   <title>Radar Discipular — Talmidim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/radar.css">
 </head>
 <body class="radar-page">
-  <main class="radar-shell" role="main">
-    <section id="radar-intro" class="radar-card" aria-labelledby="radar-intro-titulo">
-      <h1 id="radar-intro-titulo" class="radar-titulo">Antes de continuar, pare por um instante</h1>
-      <p class="radar-texto">Aqui você não vai responder com base no que acredita.
+  <header class="radar-header">
+    <div class="radar-header-inner">
+      <a href="../index.html" class="radar-header-brand" aria-label="Talmidim — início">
+        <img class="radar-header-logo" src="../assets/logo.png" alt="Talmidim" width="525" height="150" decoding="async">
+      </a>
+      <span class="material-symbols-outlined radar-header-icon" aria-hidden="true">menu_book</span>
+    </div>
+  </header>
+
+  <main class="radar-main">
+    <div class="radar-inner">
+      <section id="radar-intro" class="radar-flow" aria-labelledby="radar-intro-titulo">
+        <div class="radar-screen-pane">
+        <div class="radar-card-white radar-parchment-glow">
+          <h1 id="radar-intro-titulo" class="radar-q-title">Antes de continuar, pare por um instante</h1>
+          <p class="radar-body-text">Aqui você não vai responder com base no que acredita.
 Nem no que pretende mudar.
 
 Você vai responder com base no que viveu.
@@ -26,26 +39,64 @@ Sem justificar.
 
 A verdade não condena.
 Mas revela.</p>
-      <button type="button" class="radar-btn" id="radar-intro-continuar">Continuar</button>
-    </section>
+          <button type="button" class="radar-opcao radar-opcao--cta" id="radar-intro-continuar">
+            <span class="radar-opcao-inner">
+              <span class="radar-opcao-label">Continuar</span>
+              <span class="material-symbols-outlined radar-opcao-icon" aria-hidden="true">arrow_forward</span>
+            </span>
+          </button>
+        </div>
+        </div>
+      </section>
 
-    <section id="radar-quiz" class="radar-card" hidden aria-live="polite">
-      <p class="radar-progresso" id="radar-progresso"></p>
-      <p class="radar-area" id="radar-area"></p>
-      <p class="radar-pergunta" id="radar-pergunta-texto"></p>
-      <div class="radar-opcoes" id="radar-opcoes"></div>
-    </section>
-
-    <section id="radar-result" class="radar-card" hidden aria-labelledby="radar-result-titulo">
-      <h2 id="radar-result-titulo" class="radar-titulo">Essa é a realidade da sua vida com Deus hoje.</h2>
-      <p class="radar-texto">Você respondeu com base no que viveu.
-E isso revela onde sua vida realmente está.
-
-Isso não é um ponto final.
-É um ponto de partida.</p>
-      <button type="button" class="radar-btn" id="radar-result-continuar">Continuar</button>
-    </section>
+      <section id="radar-quiz" class="radar-flow" hidden aria-live="polite">
+        <div class="radar-quiz-pane">
+        <div class="radar-quiz-dissolve" id="radar-quiz-dissolve">
+        <div class="radar-header-block">
+          <div class="radar-meta">
+            <div class="radar-meta-icon" aria-hidden="true">
+              <span class="material-symbols-outlined radar-meta-icon-symbol">directions_walk</span>
+            </div>
+            <p class="radar-progress-label" id="radar-progresso"></p>
+            <div class="radar-badge">
+              <span class="radar-badge-text" id="radar-area"></span>
+            </div>
+          </div>
+        </div>
+        <div class="radar-card-white radar-parchment-glow">
+          <div class="radar-quiz-stage" id="radar-quiz-stage">
+            <h2 class="radar-q-title" id="radar-pergunta-texto"></h2>
+            <div class="radar-opcoes" id="radar-opcoes"></div>
+          </div>
+        </div>
+        <div class="radar-progress-track" aria-hidden="true">
+          <div class="radar-progress-fill" id="radar-progress-fill"></div>
+        </div>
+        <div class="radar-dots" id="radar-dots" aria-hidden="true"></div>
+        </div>
+        </div>
+      </section>
+    </div>
   </main>
+
+  <nav class="radar-mobile-nav" aria-label="Navegação inferior">
+    <div class="radar-mobile-nav-item">
+      <span class="material-symbols-outlined">menu_book</span>
+      <span class="radar-mobile-nav-label">Read</span>
+    </div>
+    <div class="radar-mobile-nav-item radar-mobile-nav-item--active">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+      <span class="radar-mobile-nav-label">Reflect</span>
+    </div>
+    <div class="radar-mobile-nav-item">
+      <span class="material-symbols-outlined">flare</span>
+      <span class="radar-mobile-nav-label">Pray</span>
+    </div>
+    <div class="radar-mobile-nav-item">
+      <span class="material-symbols-outlined">directions_walk</span>
+      <span class="radar-mobile-nav-label">Path</span>
+    </div>
+  </nav>
 
   <script src="../js/radar.js"></script>
 </body>

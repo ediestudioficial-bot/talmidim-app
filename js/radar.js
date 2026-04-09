@@ -3,6 +3,13 @@
 
   const STORAGE_KEY = "talmidim_radar";
 
+  /** Tempo para o destaque da opção antes da saída */
+  const HIGHLIGHT_MS = 300;
+  /** Ciclo completo: fade-out + fade-in (só opacity) */
+  const TRANSITION_MS = 320;
+  const FADE_OUT_MS = TRANSITION_MS / 2;
+  const FADE_IN_MS = TRANSITION_MS / 2;
+
   const opcoesResposta = [
     { label: "Nunca aconteceu", valor: 0 },
     { label: "Aconteceu poucas vezes", valor: 1 },
@@ -50,16 +57,39 @@
 
   const elIntro = document.getElementById("radar-intro");
   const elQuiz = document.getElementById("radar-quiz");
-  const elResult = document.getElementById("radar-result");
   const btnIntroContinuar = document.getElementById("radar-intro-continuar");
   const elArea = document.getElementById("radar-area");
   const elPergunta = document.getElementById("radar-pergunta-texto");
   const elProgresso = document.getElementById("radar-progresso");
   const elOpcoes = document.getElementById("radar-opcoes");
-  const btnResultContinuar = document.getElementById("radar-result-continuar");
+  const elDots = document.getElementById("radar-dots");
+  const elDissolve = document.getElementById("radar-quiz-dissolve");
+  const elProgressFill = document.getElementById("radar-progress-fill");
+
+  const TOTAL_SEGMENTS = 5;
 
   let indiceAtual = 0;
   const respostas = [];
+  let quizLocked = false;
+
+  function renderDots() {
+    if (!elDots) return;
+    const n = TOTAL_SEGMENTS;
+    const step = perguntas.length / n;
+    const active = Math.min(n - 1, Math.floor(indiceAtual / step));
+    elDots.innerHTML = "";
+    for (let i = 0; i < n; i++) {
+      const dot = document.createElement("div");
+      dot.className = "radar-dot" + (i === active ? " radar-dot--active" : "");
+      elDots.appendChild(dot);
+    }
+  }
+
+  function atualizarBarraProgresso() {
+    if (!elProgressFill) return;
+    const pct = ((indiceAtual + 1) / perguntas.length) * 100;
+    elProgressFill.style.width = pct + "%";
+  }
 
   function persistir() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(respostas));
@@ -73,27 +103,127 @@
     el.hidden = true;
   }
 
-  function renderPergunta() {
-    const p = perguntas[indiceAtual];
-    elArea.textContent = p.area;
-    elPergunta.textContent = p.texto;
-    elProgresso.textContent = "Pergunta " + (indiceAtual + 1) + " de " + perguntas.length;
-
+  function montarBotoesOpcoes() {
     elOpcoes.innerHTML = "";
     opcoesResposta.forEach(function (op) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "radar-opcao";
-      btn.textContent = op.label;
       btn.setAttribute("data-valor", String(op.valor));
+
+      const inner = document.createElement("span");
+      inner.className = "radar-opcao-inner";
+
+      const label = document.createElement("span");
+      label.className = "radar-opcao-label";
+      label.textContent = op.label;
+
+      const icon = document.createElement("span");
+      icon.className = "material-symbols-outlined radar-opcao-icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = "radio_button_unchecked";
+
+      inner.appendChild(label);
+      inner.appendChild(icon);
+      btn.appendChild(inner);
+
       btn.addEventListener("click", function () {
-        onEscolha(op.valor);
+        if (quizLocked) return;
+        onEscolha(op.valor, btn);
       });
       elOpcoes.appendChild(btn);
     });
   }
 
-  function onEscolha(valor) {
+  function atualizarTextoPergunta() {
+    const p = perguntas[indiceAtual];
+    elArea.textContent = p.area.toUpperCase();
+    elPergunta.textContent = p.texto;
+    elProgresso.textContent =
+      "Pergunta " + (indiceAtual + 1) + " de " + perguntas.length;
+  }
+
+  function prepararDissolveSemAnimacao() {
+    if (!elDissolve) return;
+    elDissolve.classList.remove("is-fading-out", "is-fading-in");
+    elDissolve.style.removeProperty("transition");
+    elDissolve.style.removeProperty("opacity");
+  }
+
+  /**
+   * Conteúdo já está invisível (opacity 0). Dispara fade-in em 2 rAF.
+   */
+  function iniciarFadeInDissolve() {
+    if (!elDissolve) return;
+    void elDissolve.offsetWidth;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        elDissolve.classList.add("is-fading-in");
+        elDissolve.style.removeProperty("transition");
+        elDissolve.style.removeProperty("opacity");
+      });
+    });
+    window.setTimeout(function () {
+      elDissolve.classList.remove("is-fading-in");
+      elDissolve.style.removeProperty("transition");
+      elDissolve.style.removeProperty("opacity");
+    }, FADE_IN_MS);
+  }
+
+  /**
+   * Primeira pergunta: começa invisível e entra com fade-in (sem trocar texto com opacity > 0).
+   */
+  function renderPerguntaInicial() {
+    prepararDissolveSemAnimacao();
+    if (elDissolve) {
+      elDissolve.style.transition = "none";
+      elDissolve.style.opacity = "0";
+    }
+    atualizarTextoPergunta();
+    montarBotoesOpcoes();
+    atualizarBarraProgresso();
+    renderDots();
+    if (elDissolve) {
+      iniciarFadeInDissolve();
+    }
+  }
+
+  function aplicarVisualEscolha(botaoSelecionado) {
+    elOpcoes.classList.add("radar-opcoes--choice-made");
+    const botoes = elOpcoes.querySelectorAll(".radar-opcao");
+    botoes.forEach(function (btn) {
+      if (btn === botaoSelecionado) {
+        btn.classList.add("radar-opcao--selected");
+        const ic = btn.querySelector(".radar-opcao-icon");
+        if (ic) {
+          ic.textContent = "radio_button_checked";
+        }
+      } else {
+        btn.classList.add("radar-opcao--dimmed");
+      }
+    });
+  }
+
+  function onEscolha(valor, botaoEl) {
+    if (quizLocked) return;
+    quizLocked = true;
+    elOpcoes.setAttribute("aria-busy", "true");
+
+    aplicarVisualEscolha(botaoEl);
+
+    window.setTimeout(function () {
+      if (!elDissolve) {
+        commitRespostaEAvancar(valor);
+        return;
+      }
+      elDissolve.classList.add("is-fading-out");
+      window.setTimeout(function () {
+        commitRespostaEAvancar(valor);
+      }, FADE_OUT_MS);
+    }, HIGHLIGHT_MS);
+  }
+
+  function commitRespostaEAvancar(valor) {
     const p = perguntas[indiceAtual];
     respostas.push({
       index: indiceAtual,
@@ -104,11 +234,36 @@
     persistir();
 
     indiceAtual += 1;
+
     if (indiceAtual < perguntas.length) {
-      renderPergunta();
+      if (elDissolve) {
+        elDissolve.style.transition = "none";
+        elDissolve.style.opacity = "0";
+        elDissolve.classList.remove("is-fading-out");
+        atualizarTextoPergunta();
+        montarBotoesOpcoes();
+        atualizarBarraProgresso();
+        renderDots();
+        iniciarFadeInDissolve();
+      } else {
+        atualizarTextoPergunta();
+        montarBotoesOpcoes();
+        atualizarBarraProgresso();
+        renderDots();
+      }
+      quizLocked = false;
+      elOpcoes.removeAttribute("aria-busy");
     } else {
-      esconder(elQuiz);
-      mostrar(elResult);
+      if (elProgressFill) {
+        elProgressFill.style.width = "100%";
+      }
+      prepararDissolveSemAnimacao();
+      quizLocked = false;
+      elOpcoes.removeAttribute("aria-busy");
+      try {
+        localStorage.setItem("talmidim_radar_done", "true");
+      } catch (e) {}
+      window.location.href = "radar-pausa.html";
     }
   }
 
@@ -117,12 +272,15 @@
     mostrar(elQuiz);
     indiceAtual = 0;
     respostas.length = 0;
+    try {
+      localStorage.removeItem("talmidim_radar_done");
+    } catch (e) {}
     persistir();
-    renderPergunta();
-  });
-
-  btnResultContinuar.addEventListener("click", function () {
-    window.location.href = "/";
+    quizLocked = false;
+    if (elOpcoes) {
+      elOpcoes.classList.remove("radar-opcoes--choice-made");
+    }
+    renderPerguntaInicial();
   });
 
   if (perguntas.length !== 35) {
