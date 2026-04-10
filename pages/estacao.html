@@ -32,7 +32,7 @@
     <h1 class="estacao-titulo" id="estacao-titulo">Estação</h1>
     <p class="estacao-texto" id="estacao-texto"></p>
     <div class="estacao-peregrino" aria-hidden="true">
-      <img id="estacao-peregrino-img" src="../assets/peregrino-front.png" alt="" width="256" height="512" decoding="async">
+      <img id="estacao-peregrino-img" src="../assets/peregrino.svg" alt="" width="112" height="144" decoding="async">
     </div>
     <button type="button" class="estacao-voltar" id="estacao-voltar">Voltar ao Mapa</button>
   </main>
@@ -72,22 +72,6 @@
         },
       ];
 
-      var KEY_JORNADA = "talmidim_jornada";
-      var TOTAL = 47;
-      var BASE = "../assets/peregrino-";
-
-      function loadDia() {
-        try {
-          var raw = localStorage.getItem(KEY_JORNADA);
-          if (!raw) return 1;
-          var s = JSON.parse(raw);
-          if (!s || typeof s.diaAtual !== "number") return 1;
-          return Math.max(1, Math.min(TOTAL + 1, Math.floor(s.diaAtual)));
-        } catch (e) {
-          return 1;
-        }
-      }
-
       function parseNum() {
         var q = new URLSearchParams(window.location.search);
         var n = parseInt(q.get("estacao") || q.get("e") || "1", 10);
@@ -96,22 +80,12 @@
         return n;
       }
 
-      function poseForStation(num, jornadaConcluida) {
-        if (num === 1) return "prayer";
-        if (num === 7 && jornadaConcluida) return "arms-raised";
-        return "front";
-      }
-
       document.addEventListener("DOMContentLoaded", function () {
         var num = parseNum();
         var info = ESTACOES[num - 1] || ESTACOES[0];
-        var diaAtual = loadDia();
-        var jornadaConcluida = diaAtual > TOTAL;
-        var pose = poseForStation(num, jornadaConcluida);
 
         document.getElementById("estacao-titulo").textContent = info.titulo;
         document.getElementById("estacao-texto").textContent = info.texto;
-        document.getElementById("estacao-peregrino-img").src = BASE + pose + ".png";
 
         document.getElementById("estacao-voltar").addEventListener("click", function () {
           window.location.href = "mapa.html";
