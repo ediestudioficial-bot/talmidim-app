@@ -3,8 +3,8 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const GLB_WALK = new URL("../assets/peregrino-walking.glb", import.meta.url).href;
 
-const MODEL_POS = { x: 0.3, y: -1.2, z: 0 };
-const MODEL_SCALE = 1.8;
+const MODEL_POS = { x: 0, y: -0.8, z: 0 };
+const MODEL_SCALE = 0.8;
 const BASE_TIME_SCALE = 0.7;
 
 let renderer;
@@ -34,8 +34,8 @@ function initThree() {
   scene.background = null;
 
   camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 100);
-  camera.position.set(0, 2, 4);
-  camera.lookAt(MODEL_POS.x, MODEL_POS.y + 0.5, MODEL_POS.z);
+  camera.position.set(0, 1.5, 3.5);
+  camera.lookAt(0, 0.5, 0);
 
   renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -70,7 +70,7 @@ function initThree() {
       var root = gltf.scene;
       root.position.set(MODEL_POS.x, MODEL_POS.y, MODEL_POS.z);
       root.scale.setScalar(MODEL_SCALE);
-      root.rotation.y = 0;
+      root.rotation.y = Math.PI;
       scene.add(root);
 
       var clip = pickWalkClip(gltf.animations);

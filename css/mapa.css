@@ -138,10 +138,10 @@ body.mapa-page.mapa-leave {
 /* Peregrino 3D (Three.js) — canvas transparente sobre o mapa */
 #peregrino-canvas {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  height: 70%;
   pointer-events: none;
   z-index: 15;
   display: block;
