@@ -1,4 +1,4 @@
-const CACHE_NAME = "talmidim-v19";
+const CACHE_NAME = "talmidim-v20";
 
 const PRECACHE_URLS = [
   "./",
@@ -26,6 +26,7 @@ const PRECACHE_URLS = [
   "./js/pdd.js",
   "./js/jornada.js",
   "./js/mapa-ui.js",
+  "./js/mapa-peregrino-3d.js",
   "./js/mapa.js",
   "./js/jornada-dias.json",
   "./assets/logo.png",
@@ -39,6 +40,8 @@ const PRECACHE_URLS = [
   "./assets/peregrino-sitting.png",
   "./assets/peregrino-arms-raised.png",
   "./assets/peregrino-tired.png",
+  "./assets/peregrino-walking.glb",
+  "./assets/peregrino-running.glb",
   "./assets/icon-192.png",
   "./assets/icon-512.png"
 ];

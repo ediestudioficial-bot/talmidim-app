@@ -9,6 +9,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/mapa.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
   <script>
     (function () {
       try {
@@ -36,16 +44,7 @@
     <div class="mapa-logo-float">
       <img src="../assets/logo.png" alt="Talmidim" width="525" height="150" decoding="async">
     </div>
-    <div id="peregrino-avatar" aria-hidden="true">
-      <img
-        id="peregrino-img"
-        src="../assets/peregrino-back.png"
-        alt=""
-        width="256"
-        height="512"
-        decoding="async"
-      >
-    </div>
+    <canvas id="peregrino-canvas" aria-hidden="true"></canvas>
     <div class="mapa-markers" id="mapa-markers" aria-label="Estações da jornada"></div>
     <div class="mapa-painel">
       <p class="mapa-badge" id="mapa-badge">Dia 1 de 47</p>
@@ -56,6 +55,7 @@
     </div>
   </div>
 
+  <script type="module" src="../js/mapa-peregrino-3d.js"></script>
   <script src="../js/mapa-ui.js"></script>
   <script src="../js/mapa.js"></script>
 </body>
