@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f2840">
+  <title>Estação — Talmidim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/estacao.css">
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("talmidim_radar_done") !== "true") {
+          window.location.replace("radar.html");
+        }
+      } catch (e) {
+        window.location.replace("radar.html");
+      }
+    })();
+  </script>
+</head>
+<body class="estacao-page">
+  <div class="estacao-logo">
+    <a href="../index.html" aria-label="Talmidim — início">
+      <img src="../assets/logo.png" alt="Talmidim" width="525" height="150" decoding="async">
+    </a>
+  </div>
+
+  <main class="estacao-main">
+    <h1 class="estacao-titulo" id="estacao-titulo">Estação</h1>
+    <p class="estacao-texto" id="estacao-texto"></p>
+    <div class="estacao-peregrino" aria-hidden="true">
+      <img id="estacao-peregrino-img" src="../assets/peregrino-front.png" alt="" width="256" height="512" decoding="async">
+    </div>
+    <button type="button" class="estacao-voltar" id="estacao-voltar">Voltar ao Mapa</button>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var ESTACOES = [
+        {
+          titulo: "Estação 1 — Intimidade com Deus",
+          texto: "O caminho começa na presença: silêncio, oração e escuta diante do Senhor.",
+        },
+        {
+          titulo: "Estação 2 — Palavra",
+          texto: "A Escritura molda o discípulo; leitura e obediência caminham juntas.",
+        },
+        {
+          titulo: "Estação 3 — Oração",
+          texto: "Intercessão e intimidade sustentam cada passo da jornada.",
+        },
+        {
+          titulo: "Estação 4 — Comunhão",
+          texto: "Corpo com corpo: relacionamento verdadeiro com os santos.",
+        },
+        {
+          titulo: "Estação 5 — Evangelho",
+          texto: "Testemunho e missão: levar Cristo além dos muros da igreja.",
+        },
+        {
+          titulo: "Estação 6 — Caráter",
+          texto: "Graça que disciplina: integridade e santidade no dia a dia.",
+        },
+        {
+          titulo: "Estação 7 — Mordomia",
+          texto: "Tempo, dons e recursos nas mãos do Rei — fidelidade até o fim.",
+        },
+      ];
+
+      var KEY_JORNADA = "talmidim_jornada";
+      var TOTAL = 47;
+      var BASE = "../assets/peregrino-";
+
+      function loadDia() {
+        try {
+          var raw = localStorage.getItem(KEY_JORNADA);
+          if (!raw) return 1;
+          var s = JSON.parse(raw);
+          if (!s || typeof s.diaAtual !== "number") return 1;
+          return Math.max(1, Math.min(TOTAL + 1, Math.floor(s.diaAtual)));
+        } catch (e) {
+          return 1;
+        }
+      }
+
+      function parseNum() {
+        var q = new URLSearchParams(window.location.search);
+        var n = parseInt(q.get("estacao") || q.get("e") || "1", 10);
+        if (!isFinite(n) || n < 1) return 1;
+        if (n > 7) return 7;
+        return n;
+      }
+
+      function poseForStation(num, jornadaConcluida) {
+        if (num === 1) return "prayer";
+        if (num === 7 && jornadaConcluida) return "arms-raised";
+        return "front";
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var num = parseNum();
+        var info = ESTACOES[num - 1] || ESTACOES[0];
+        var diaAtual = loadDia();
+        var jornadaConcluida = diaAtual > TOTAL;
+        var pose = poseForStation(num, jornadaConcluida);
+
+        document.getElementById("estacao-titulo").textContent = info.titulo;
+        document.getElementById("estacao-texto").textContent = info.texto;
+        document.getElementById("estacao-peregrino-img").src = BASE + pose + ".png";
+
+        document.getElementById("estacao-voltar").addEventListener("click", function () {
+          window.location.href = "mapa.html";
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

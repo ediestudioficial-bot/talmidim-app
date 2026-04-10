@@ -5,6 +5,9 @@
   var KEY_JORNADA = "talmidim_jornada";
   var KEY_PDD = "talmidim_pdd";
   var LEAVE_MS = 400;
+  var PEREGRINO_PATH = "../assets/peregrino-";
+  /** Meia troca de pose: fade out + fade in = 600 ms */
+  var POSE_HALF_MS = 300;
 
   /** Sete estações — posições % sobre a arte do mapa */
   var ESTACOES = [
@@ -16,6 +19,9 @@
     { left: 72, top: 44 },
     { left: 84, top: 38 },
   ];
+
+  var peregrinoAvatar = null;
+  var peregrinoImg = null;
 
   function loadState() {
     try {
@@ -58,6 +64,37 @@
     return Math.min(7, Math.max(1, Math.ceil((diaAtual / TOTAL) * 7)));
   }
 
+  /**
+   * Troca a pose do Peregrino: fade out → novo src → fade in (600 ms no total).
+   * @param {string} poseName — sufixo do ficheiro (ex.: "back", "walk-right")
+   * @param {function=} onDone
+   */
+  function changePose(poseName, onDone) {
+    if (!peregrinoAvatar || !peregrinoImg) {
+      if (typeof onDone === "function") {
+        onDone();
+      }
+      return;
+    }
+    peregrinoAvatar.style.transition =
+      "opacity " + POSE_HALF_MS / 1000 + "s ease, transform 0.6s ease";
+    peregrinoAvatar.style.opacity = "0";
+    window.setTimeout(function () {
+      peregrinoImg.src = PEREGRINO_PATH + poseName + ".png";
+      peregrinoImg.alt = "";
+      void peregrinoImg.offsetWidth;
+      peregrinoAvatar.style.opacity = "1";
+      window.setTimeout(function () {
+        peregrinoAvatar.style.transition = "";
+        if (typeof onDone === "function") {
+          onDone();
+        }
+      }, POSE_HALF_MS);
+    }, POSE_HALF_MS);
+  }
+
+  window.changePose = changePose;
+
   function irJornada() {
     document.body.classList.remove("mapa-ready");
     document.body.classList.add("mapa-leave");
@@ -66,11 +103,31 @@
     }, LEAVE_MS);
   }
 
+  function onContinuarJornada() {
+    changePose("walk-right", function () {
+      window.setTimeout(function () {
+        changePose("back", function () {
+          window.setTimeout(irJornada, 250);
+        });
+      }, 2000);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     var markersEl = document.getElementById("mapa-markers");
     var badgeEl = document.getElementById("mapa-badge");
     var ctxEl = document.getElementById("mapa-ctx");
     var ctaEl = document.getElementById("mapa-cta");
+
+    peregrinoAvatar = document.getElementById("peregrino-avatar");
+    peregrinoImg = document.getElementById("peregrino-img");
+    if (peregrinoImg) {
+      peregrinoImg.src = PEREGRINO_PATH + "back.png";
+      peregrinoImg.alt = "";
+    }
+    if (peregrinoAvatar) {
+      peregrinoAvatar.style.opacity = "1";
+    }
 
     if (!markersEl || !badgeEl || !ctaEl) {
       document.body.classList.add("mapa-ready");
@@ -99,7 +156,7 @@
       ctxEl.innerHTML = "";
     }
 
-    ctaEl.addEventListener("click", irJornada);
+    ctaEl.addEventListener("click", onContinuarJornada);
 
     ESTACOES.forEach(function (pos, i) {
       var n = i + 1;
