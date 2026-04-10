@@ -1,3 +1,7 @@
+/**
+ * Radar discipular: ordem fixa Área 1 → 7, 5 perguntas cada.
+ * Sem voltar, sem pular, sem escolher área — só avanço ao responder.
+ */
 (function () {
   "use strict";
 
@@ -30,176 +34,82 @@
     { label: "Fez parte da minha rotina", valor: 3 },
   ];
 
-  const perguntas = [
-    {
-      area: "Intimidade",
-      texto:
-        "Nos últimos 7 dias, você separou tempo real para estar com Deus em oração?",
-    },
-    {
-      area: "Intimidade",
-      texto: "Você leu a Bíblia de forma intencional esta semana?",
-    },
-    {
-      area: "Intimidade",
-      texto: "Você praticou algum tipo de jejum no último mês?",
-    },
-    {
-      area: "Intimidade",
-      texto:
-        "Você teve momentos de silêncio e escuta de Deus recentemente?",
-    },
-    {
-      area: "Intimidade",
-      texto:
-        "Sua vida de oração tem sido mais rotina ou encontro real?",
-    },
-    {
-      area: "Família",
-      texto:
-        "Você demonstrou amor ativo ao seu cônjuge ou família esta semana?",
-    },
-    {
-      area: "Família",
-      texto:
-        "Você resolveu algum conflito familiar com maturidade recentemente?",
-    },
-    {
-      area: "Família",
-      texto: "Sua família sente sua presença espiritual em casa?",
-    },
-    {
-      area: "Família",
-      texto: "Você orou com sua família nos últimos 7 dias?",
-    },
-    {
-      area: "Família",
-      texto: "Você pediu perdão a alguém da família quando errou?",
-    },
-    {
-      area: "Evangelização",
-      texto:
-        "Você compartilhou sua fé com alguém fora da igreja no último mês?",
-    },
-    {
-      area: "Evangelização",
-      texto:
-        "Você tem algum relacionamento intencional com não-cristãos?",
-    },
-    {
-      area: "Evangelização",
-      texto:
-        "Você orou por alguém específico para conhecer Jesus recentemente?",
-    },
-    {
-      area: "Evangelização",
-      texto:
-        "Você testemunhou da sua fé com palavras esta semana?",
-    },
-    {
-      area: "Evangelização",
-      texto:
-        "Você convidou alguém para a igreja ou um evento cristão recentemente?",
-    },
-    {
-      area: "Compaixão",
-      texto: "Você ajudou alguém em necessidade prática esta semana?",
-    },
-    {
-      area: "Compaixão",
-      texto:
-        "Você perdoou alguém que te magoou recentemente?",
-    },
-    {
-      area: "Compaixão",
-      texto:
-        "Você demonstrou misericórdia em vez de julgamento esta semana?",
-    },
-    {
-      area: "Compaixão",
-      texto:
-        "Você se importou com alguém marginalizado ou esquecido?",
-    },
-    {
-      area: "Compaixão",
-      texto:
-        "Você agiu com graça quando poderia ter reagido com dureza?",
-    },
-    {
-      area: "Mordomia",
-      texto:
-        "Você usou seu dinheiro de forma consciente e generosa esta semana?",
-    },
-    {
-      area: "Mordomia",
-      texto: "Você administrou bem seu tempo esta semana?",
-    },
-    {
-      area: "Mordomia",
-      texto:
-        "Você está usando seus dons espirituais de forma intencional?",
-    },
-    {
-      area: "Mordomia",
-      texto:
-        "Você cuidou do seu corpo como templo do Espírito?",
-    },
-    {
-      area: "Mordomia",
-      texto:
-        "Você devolveu o dízimo ou ofertas à obra de Deus?",
-    },
-    {
-      area: "Serviço",
-      texto:
-        "Você serviu na sua igreja ou comunidade esta semana?",
-    },
-    {
-      area: "Serviço",
-      texto:
-        "Você usou seus talentos para o bem de outros recentemente?",
-    },
-    {
-      area: "Serviço",
-      texto:
-        "Você está em algum ministério ou área de serviço ativo?",
-    },
-    {
-      area: "Serviço",
-      texto:
-        "Você ajudou alguém sem esperar reconhecimento?",
-    },
-    {
-      area: "Serviço",
-      texto:
-        "Você participou de alguma ação de impacto social recentemente?",
-    },
-    {
-      area: "Comunhão",
-      texto:
-        "Você teve comunhão real com outros cristãos esta semana?",
-    },
-    {
-      area: "Comunhão",
-      texto:
-        "Você tem alguém que acompanha sua vida espiritual?",
-    },
-    {
-      area: "Comunhão",
-      texto:
-        "Você foi honesto com alguém sobre suas lutas espirituais?",
-    },
-    {
-      area: "Comunhão",
-      texto:
-        "Você orou por outros membros da sua comunidade?",
-    },
-    {
-      area: "Comunhão",
-      texto:
-        "Você participou de algum grupo ou célula recentemente?",
-    },
-  ];
+  /** Textos por área — a ordem do questionário é sempre AREA_ORDER × 5. */
+  const TEXTO_POR_AREA = {
+    Intimidade: [
+      "Nos últimos 7 dias, você separou tempo real para estar com Deus em oração?",
+      "Você leu a Bíblia de forma intencional esta semana?",
+      "Você praticou algum tipo de jejum no último mês?",
+      "Você teve momentos de silêncio e escuta de Deus recentemente?",
+      "Sua vida de oração tem sido mais rotina ou encontro real?",
+    ],
+    Família: [
+      "Você demonstrou amor ativo ao seu cônjuge ou família esta semana?",
+      "Você resolveu algum conflito familiar com maturidade recentemente?",
+      "Sua família sente sua presença espiritual em casa?",
+      "Você orou com sua família nos últimos 7 dias?",
+      "Você pediu perdão a alguém da família quando errou?",
+    ],
+    Evangelização: [
+      "Você compartilhou sua fé com alguém fora da igreja no último mês?",
+      "Você tem algum relacionamento intencional com não-cristãos?",
+      "Você orou por alguém específico para conhecer Jesus recentemente?",
+      "Você testemunhou da sua fé com palavras esta semana?",
+      "Você convidou alguém para a igreja ou um evento cristão recentemente?",
+    ],
+    Compaixão: [
+      "Você ajudou alguém em necessidade prática esta semana?",
+      "Você perdoou alguém que te magoou recentemente?",
+      "Você demonstrou misericórdia em vez de julgamento esta semana?",
+      "Você se importou com alguém marginalizado ou esquecido?",
+      "Você agiu com graça quando poderia ter reagido com dureza?",
+    ],
+    Mordomia: [
+      "Você usou seu dinheiro de forma consciente e generosa esta semana?",
+      "Você administrou bem seu tempo esta semana?",
+      "Você está usando seus dons espirituais de forma intencional?",
+      "Você cuidou do seu corpo como templo do Espírito?",
+      "Você devolveu o dízimo ou ofertas à obra de Deus?",
+    ],
+    Serviço: [
+      "Você serviu na sua igreja ou comunidade esta semana?",
+      "Você usou seus talentos para o bem de outros recentemente?",
+      "Você está em algum ministério ou área de serviço ativo?",
+      "Você ajudou alguém sem esperar reconhecimento?",
+      "Você participou de alguma ação de impacto social recentemente?",
+    ],
+    Comunhão: [
+      "Você teve comunhão real com outros cristãos esta semana?",
+      "Você tem alguém que acompanha sua vida espiritual?",
+      "Você foi honesto com alguém sobre suas lutas espirituais?",
+      "Você orou por outros membros da sua comunidade?",
+      "Você participou de algum grupo ou célula recentemente?",
+    ],
+  };
+
+  const perguntas = [];
+  AREA_ORDER.forEach(function (area) {
+    const textos = TEXTO_POR_AREA[area];
+    if (!textos || textos.length !== PERGUNTAS_POR_AREA) {
+      throw new Error(
+        "radar: cada área precisa de " +
+          PERGUNTAS_POR_AREA +
+          " perguntas (" +
+          area +
+          ")."
+      );
+    }
+    textos.forEach(function (texto) {
+      perguntas.push({ area: area, texto: texto });
+    });
+  });
+
+  for (let i = 0; i < perguntas.length; i++) {
+    const esperada = AREA_ORDER[Math.floor(i / PERGUNTAS_POR_AREA)];
+    if (perguntas[i].area !== esperada) {
+      throw new Error("radar: ordem fixa quebrada no índice " + i);
+    }
+  }
 
   const elIntro = document.getElementById("radar-intro");
   const elQuiz = document.getElementById("radar-quiz");
