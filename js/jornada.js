@@ -4,8 +4,9 @@
   var KEY_PDD = "talmidim_pdd";
   var KEY_JORNADA = "talmidim_jornada";
   var KEY_MAPA_INTRO_VISTA = "talmidim_mapa_intro_vista";
-  var TOTAL_DIAS = 47;
+  var KEY_MAPA_FLOW = "talmidim_mapa_flow_v1";
   var DATA_URL = "../js/jornada-dias.json";
+  var MIN_ENTRADAS_JSON = 147;
 
   var elPdd = document.getElementById("jornada-pdd");
   var elHoje = document.getElementById("jornada-hoje");
@@ -21,6 +22,21 @@
 
   function redirectRadar() {
     window.location.replace("radar.html");
+  }
+
+  function loadEstacaoAtual() {
+    try {
+      var raw = localStorage.getItem(KEY_MAPA_FLOW);
+      if (!raw) {
+        return 1;
+      }
+      var o = JSON.parse(raw);
+      var e = parseInt(o.estacao, 10);
+      if (e >= 1 && e <= 7) {
+        return e;
+      }
+    } catch (e) {}
+    return 1;
   }
 
   function loadPdd() {
@@ -39,41 +55,115 @@
     }
   }
 
-  function defaultState() {
-    return { diaAtual: 1, concluidos: [] };
+  function diasDaEstacao(arr, estacao) {
+    return arr
+      .filter(function (item) {
+        return (
+          item &&
+          typeof item.dia === "number" &&
+          parseInt(item.estacao, 10) === estacao
+        );
+      })
+      .sort(function (a, b) {
+        return a.dia - b.dia;
+      });
   }
 
-  function loadState() {
+  function firstDiaGlobal(diasEstacao) {
+    return diasEstacao.length ? diasEstacao[0].dia : 1;
+  }
+
+  function lastDiaGlobal(diasEstacao) {
+    return diasEstacao.length
+      ? diasEstacao[diasEstacao.length - 1].dia
+      : 1;
+  }
+
+  function globalToLocal(diasEstacao, globalDia) {
+    for (var i = 0; i < diasEstacao.length; i++) {
+      if (diasEstacao[i].dia === globalDia) {
+        return i + 1;
+      }
+    }
+    return null;
+  }
+
+  function nextGlobalDia(diasEstacao, currentGlobalDia) {
+    for (var i = 0; i < diasEstacao.length - 1; i++) {
+      if (diasEstacao[i].dia === currentGlobalDia) {
+        return diasEstacao[i + 1].dia;
+      }
+    }
+    return lastDiaGlobal(diasEstacao) + 1;
+  }
+
+  function clampConcluidos(concluidos, diasEstacao) {
+    var valid = {};
+    diasEstacao.forEach(function (it) {
+      valid[it.dia] = true;
+    });
+    var uniq = [];
+    (concluidos || []).forEach(function (n) {
+      var d = parseInt(n, 10);
+      if (valid[d] && uniq.indexOf(d) < 0) {
+        uniq.push(d);
+      }
+    });
+    return uniq;
+  }
+
+  function loadState(diasEstacao, estacaoAtual) {
+    var first = firstDiaGlobal(diasEstacao);
+    var last = lastDiaGlobal(diasEstacao);
+    var def = {
+      estacao: estacaoAtual,
+      diaAtual: first,
+      concluidos: [],
+    };
+    if (!diasEstacao.length) {
+      return def;
+    }
     try {
       var raw = localStorage.getItem(KEY_JORNADA);
       if (!raw) {
-        return defaultState();
+        return def;
       }
       var s = JSON.parse(raw);
       if (!s || typeof s.diaAtual !== "number" || !Array.isArray(s.concluidos)) {
-        return defaultState();
+        return def;
       }
-      var concluidos = s.concluidos
-        .map(function (n) {
-          return parseInt(n, 10);
-        })
-        .filter(function (n) {
-          return n >= 1 && n <= TOTAL_DIAS;
-        });
-      var uniq = [];
-      concluidos.forEach(function (n) {
-        if (uniq.indexOf(n) < 0) {
-          uniq.push(n);
-        }
+      if (typeof s.estacao !== "number" || s.estacao !== estacaoAtual) {
+        return def;
+      }
+      var concluidos = clampConcluidos(s.concluidos, diasEstacao);
+      var diaAtual = Math.floor(s.diaAtual);
+      var validGlobal = {};
+      diasEstacao.forEach(function (it) {
+        validGlobal[it.dia] = true;
       });
-      var diaAtual = Math.max(1, Math.min(TOTAL_DIAS + 1, Math.floor(s.diaAtual)));
-      return { diaAtual: diaAtual, concluidos: uniq };
+      if (diaAtual === last + 1) {
+        return { estacao: estacaoAtual, diaAtual: diaAtual, concluidos: concluidos };
+      }
+      if (!validGlobal[diaAtual]) {
+        diaAtual = first;
+      }
+      while (concluidos.indexOf(diaAtual) >= 0 && diaAtual <= last) {
+        diaAtual = nextGlobalDia(diasEstacao, diaAtual);
+      }
+      if (diaAtual > last) {
+        return {
+          estacao: estacaoAtual,
+          diaAtual: last + 1,
+          concluidos: concluidos,
+        };
+      }
+      return { estacao: estacaoAtual, diaAtual: diaAtual, concluidos: concluidos };
     } catch (e) {
-      return defaultState();
+      return def;
     }
   }
 
-  function saveState(s) {
+  function saveState(s, firstDia) {
     try {
       var prevHadProgress = false;
       var rawPrev = localStorage.getItem(KEY_JORNADA);
@@ -82,7 +172,7 @@
           var prev = JSON.parse(rawPrev);
           if (prev && typeof prev.diaAtual === "number") {
             if (
-              prev.diaAtual > 1 ||
+              prev.diaAtual > firstDia ||
               (Array.isArray(prev.concluidos) && prev.concluidos.length > 0)
             ) {
               prevHadProgress = true;
@@ -93,7 +183,7 @@
       localStorage.setItem(KEY_JORNADA, JSON.stringify(s));
       if (
         prevHadProgress &&
-        s.diaAtual === 1 &&
+        s.diaAtual === firstDia &&
         (!s.concluidos || s.concluidos.length === 0)
       ) {
         localStorage.removeItem(KEY_MAPA_INTRO_VISTA);
@@ -111,7 +201,7 @@
       "Você decidiu viver: " + pdd.area + "\n\nPrática: " + pdd.acao;
   }
 
-  function appendDayRow(d, kind) {
+  function appendDayRow(localDia, kind) {
     if (!elMapa) {
       return;
     }
@@ -139,19 +229,20 @@
     var txt = document.createElement("span");
     var suffix =
       kind === "current" ? " (hoje)" : kind === "done" ? " (feito)" : " (bloqueado)";
-    txt.textContent = "Dia " + d + suffix;
+    txt.textContent = "Dia " + localDia + suffix;
     li.appendChild(ico);
     li.appendChild(txt);
     elMapa.appendChild(li);
   }
 
-  /** Só último dia feito, dia atual e próximo bloqueado — o resto fica oculto. */
-  function renderMapa(state) {
+  function renderMapa(state, diasEstacao) {
     if (!elMapa) {
       return;
     }
     elMapa.innerHTML = "";
-    if (state.diaAtual > TOTAL_DIAS) {
+    var N = diasEstacao.length;
+    var lastG = lastDiaGlobal(diasEstacao);
+    if (state.diaAtual > lastG) {
       if (elMapaWrap) {
         elMapaWrap.hidden = true;
       }
@@ -160,23 +251,28 @@
     if (elMapaWrap) {
       elMapaWrap.hidden = false;
     }
-    var cur = state.diaAtual;
-    var last = cur > 1 ? cur - 1 : null;
-    var next = cur < TOTAL_DIAS ? cur + 1 : null;
-    if (last) {
-      appendDayRow(last, "done");
+    var curLocal = globalToLocal(diasEstacao, state.diaAtual);
+    if (curLocal == null) {
+      curLocal = 1;
     }
-    appendDayRow(cur, "current");
-    if (next) {
-      appendDayRow(next, "locked");
+    var lastLocal = curLocal > 1 ? curLocal - 1 : null;
+    var nextLocal = curLocal < N ? curLocal + 1 : null;
+    if (lastLocal) {
+      appendDayRow(lastLocal, "done");
+    }
+    appendDayRow(curLocal, "current");
+    if (nextLocal) {
+      appendDayRow(nextLocal, "locked");
     }
   }
 
-  function renderDia(diasPorNumero, state) {
+  function renderDia(diasPorNumero, state, diasEstacao) {
     if (!elHoje || !elConcluido) {
       return;
     }
-    if (state.diaAtual > TOTAL_DIAS) {
+    var N = diasEstacao.length;
+    var lastG = lastDiaGlobal(diasEstacao);
+    if (state.diaAtual > lastG) {
       elHoje.hidden = true;
       elConcluido.hidden = false;
       if (btnCompletar) {
@@ -186,17 +282,21 @@
     }
     elConcluido.hidden = true;
     elHoje.hidden = false;
-    var dia = state.diaAtual;
-    var pack = diasPorNumero[dia];
+    var globalDia = state.diaAtual;
+    var pack = diasPorNumero[globalDia];
     if (!pack) {
       return;
     }
-    elDiaLabel.textContent = "Dia " + dia + " de " + TOTAL_DIAS;
+    var localDia = globalToLocal(diasEstacao, globalDia);
+    if (localDia == null) {
+      localDia = 1;
+    }
+    elDiaLabel.textContent = "Dia " + localDia + " de " + N;
     elConfronto.textContent = pack.confronto;
     elDirecao.textContent = pack.direcao;
     elAcao.textContent = pack.acao;
     if (btnCompletar) {
-      btnCompletar.disabled = state.concluidos.indexOf(dia) >= 0;
+      btnCompletar.disabled = state.concluidos.indexOf(globalDia) >= 0;
     }
   }
 
@@ -204,11 +304,6 @@
   if (!pdd) {
     redirectRadar();
     return;
-  }
-
-  var state = loadState();
-  if (!localStorage.getItem(KEY_JORNADA)) {
-    saveState(state);
   }
 
   renderPdd(pdd);
@@ -221,8 +316,18 @@
       return r.json();
     })
     .then(function (arr) {
-      if (!Array.isArray(arr) || arr.length < TOTAL_DIAS) {
+      if (!Array.isArray(arr) || arr.length < MIN_ENTRADAS_JSON) {
         throw new Error("dados");
+      }
+      var estacaoAtual = loadEstacaoAtual();
+      var diasEstacao = diasDaEstacao(arr, estacaoAtual);
+      if (!diasEstacao.length) {
+        throw new Error("estacao");
+      }
+      var firstDia = firstDiaGlobal(diasEstacao);
+      var state = loadState(diasEstacao, estacaoAtual);
+      if (!localStorage.getItem(KEY_JORNADA)) {
+        saveState(state, firstDia);
       }
       var map = {};
       arr.forEach(function (item) {
@@ -233,15 +338,16 @@
       var diasPorNumero = map;
 
       function refresh() {
-        renderDia(diasPorNumero, state);
-        renderMapa(state);
+        renderDia(diasPorNumero, state, diasEstacao);
+        renderMapa(state, diasEstacao);
       }
 
       refresh();
 
       if (btnCompletar) {
         btnCompletar.addEventListener("click", function () {
-          if (state.diaAtual > TOTAL_DIAS) {
+          var lastG = lastDiaGlobal(diasEstacao);
+          if (state.diaAtual > lastG) {
             return;
           }
           var hoje = state.diaAtual;
@@ -249,8 +355,8 @@
             return;
           }
           state.concluidos.push(hoje);
-          state.diaAtual = hoje + 1;
-          saveState(state);
+          state.diaAtual = nextGlobalDia(diasEstacao, hoje);
+          saveState(state, firstDia);
           window.location.href = "mapa.html";
         });
       }

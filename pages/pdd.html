@@ -27,19 +27,11 @@
 
 Mas precisa começar por algo real.</p>
 
-    <section id="pdd-step1" class="pdd-step" aria-labelledby="pdd-step1-title">
+    <section class="pdd-step" aria-labelledby="pdd-step1-title">
       <h1 id="pdd-step1-title" class="pdd-page-title">Plano de Decisão Discipular</h1>
-      <p class="pdd-lead">Escolha <strong>uma</strong> área em que você vai investir com intenção nesta temporada.</p>
+      <p class="pdd-lead">As estações da jornada seguem uma ordem na qual você não escolhe. Registre aqui o que você vai começar a fazer, de forma prática, nesta temporada.</p>
 
-      <ul class="pdd-areas" id="pdd-areas"></ul>
-
-      <div class="pdd-actions">
-        <button type="button" class="pdd-btn" id="pdd-btn-step1" disabled>Continuar</button>
-      </div>
-    </section>
-
-    <section id="pdd-step2" class="pdd-step" hidden aria-labelledby="pdd-step2-title">
-      <h2 id="pdd-step2-title" class="pdd-step2-title">O que você vai começar a fazer, de forma prática?</h2>
+      <h2 class="pdd-step2-title">O que você vai começar a fazer, de forma prática?</h2>
 
       <label class="visually-hidden" for="pdd-acao">Sua ação prática</label>
       <input
@@ -54,12 +46,62 @@ Mas precisa começar por algo real.</p>
       <p class="pdd-hint" id="pdd-acao-hint">Mínimo de 10 caracteres.</p>
 
       <div class="pdd-actions">
-        <button type="button" class="pdd-btn" id="pdd-btn-step2" disabled>Continuar jornada</button>
-        <button type="button" class="pdd-btn pdd-btn--ghost" id="pdd-btn-voltar">Voltar</button>
+        <button type="button" class="pdd-btn" id="pdd-btn-continuar" disabled>Continuar jornada</button>
       </div>
     </section>
   </main>
 
-  <script src="../js/pdd.js"></script>
+  <script>
+(function () {
+  "use strict";
+
+  var MIN_ACAO = 10;
+  var STORAGE_KEY = "talmidim_pdd";
+  /** Valor fixo; as estações não são escolhidas pelo usuário. */
+  var AREA_FIXA = "As sete estações";
+
+  var btn = document.getElementById("pdd-btn-continuar");
+  var inputAcao = document.getElementById("pdd-acao");
+
+  function trimAcao() {
+    return inputAcao ? inputAcao.value.trim() : "";
+  }
+
+  function isAcaoValid() {
+    return trimAcao().length >= MIN_ACAO;
+  }
+
+  function updateButton() {
+    if (btn) {
+      btn.disabled = !isAcaoValid();
+    }
+  }
+
+  if (inputAcao) {
+    inputAcao.addEventListener("input", updateButton);
+  }
+
+  if (btn) {
+    btn.addEventListener("click", function () {
+      if (!isAcaoValid()) {
+        return;
+      }
+      var payload = {
+        area: AREA_FIXA,
+        acao: trimAcao(),
+        data: new Date().toISOString(),
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (e) {
+        return;
+      }
+      window.location.href = "mapa.html";
+    });
+  }
+
+  updateButton();
+})();
+  </script>
 </body>
 </html>

@@ -3,60 +3,463 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0f2840">
-  <title>Mapa da jornada — Talmidim</title>
+  <meta name="theme-color" content="#0a1628">
+  <title>Mapa — Talmidim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/mapa.css">
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #0a1628;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+    }
+    .screen[hidden] {
+      display: none !important;
+    }
+
+    /* —— Mapa zero —— */
+    #screen-map {
+      display: flex;
+      flex-direction: column;
+    }
+    .map-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      user-select: none;
+      pointer-events: none;
+    }
+    .map-hit {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .marker-wrap {
+      position: absolute;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      pointer-events: auto;
+      cursor: pointer;
+      touch-action: manipulation;
+      max-width: min(92vw, 260px);
+      text-align: center;
+      appearance: none;
+      -webkit-appearance: none;
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      color: inherit;
+      box-shadow: none;
+    }
+    .marker-wrap:focus {
+      outline: none;
+    }
+    .marker-wrap:focus-visible {
+      outline: 2px solid rgba(200, 168, 75, 0.55);
+      outline-offset: 6px;
+      border-radius: 999px;
+    }
+    .marker-disc {
+      position: relative;
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 32% 28%, #f2e5bc 0%, #d4b24a 42%, #9a7618 88%, #6b4f0a 100%);
+      color: #5c4510;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 0 0 0 rgba(200, 168, 75, 0.45),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+      animation: marker-pulse 2s ease-in-out infinite;
+    }
+    .marker-disc .marker-ico {
+      width: 52%;
+      height: 52%;
+      display: block;
+      flex-shrink: 0;
+    }
+    @keyframes marker-pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.35),
+          0 0 0 0 rgba(200, 168, 75, 0.5),
+          0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+      50% {
+        transform: scale(1.06);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.4),
+          0 0 0 10px rgba(200, 168, 75, 0),
+          0 3px 14px rgba(0, 0, 0, 0.18);
+      }
+    }
+    .marker-label {
+      display: block;
+      margin: 0;
+      font-family: "Cormorant Garamond", "Times New Roman", Times, serif;
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(0.95rem, 3.2vw, 1.15rem);
+      letter-spacing: 0.06em;
+      line-height: 1.25;
+      color: #C8A84B;
+      text-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.35),
+        0 0 18px rgba(0, 0, 0, 0.22);
+    }
+
+    /* Posições por estação (sobre o mapa) */
+    .marker-wrap.pos-e1 { right: 6%; bottom: 10%; left: auto; top: auto; transform: none; }
+    .marker-wrap.pos-e2 { left: 8%; top: 50%; right: auto; bottom: auto; transform: translateY(-50%); }
+    .marker-wrap.pos-e3 { left: 50%; top: 52%; right: auto; bottom: auto; transform: translate(-50%, -50%); }
+    .marker-wrap.pos-e4 { left: 26%; top: 28%; right: auto; bottom: auto; transform: none; }
+    .marker-wrap.pos-e5 { right: 7%; top: 50%; left: auto; bottom: auto; transform: translateY(-50%); }
+    .marker-wrap.pos-e6 { left: 11%; top: 20%; right: auto; bottom: auto; transform: none; }
+    .marker-wrap.pos-e7 { right: 9%; top: 16%; left: auto; bottom: auto; transform: none; }
+
+    @media (max-width: 480px) {
+      .marker-wrap.pos-e3 { top: 54%; }
+    }
+
+    /* —— Vídeo —— */
+    #screen-video {
+      background: #000;
+      z-index: 5;
+    }
+    #video-el {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    /* —— Cenas —— */
+    #screen-cenas {
+      background: #0a1628;
+      z-index: 5;
+    }
+    .cena-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      background: #0a1628;
+    }
+    .cena-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: max(1rem, env(safe-area-inset-bottom));
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.45), transparent 70%);
+    }
+    .btn-continuar {
+      pointer-events: auto;
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(10, 22, 40, 0.55);
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.65rem 1.35rem;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .btn-continuar:hover {
+      background: rgba(20, 40, 72, 0.75);
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+    .btn-continuar:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+  <section id="screen-map" class="screen" aria-label="Mapa zero">
+    <img class="map-bg" src="../assets/mapa-zero.png" alt="" decoding="async">
+    <div class="map-hit" aria-hidden="true"></div>
+    <button type="button" class="marker-wrap" id="marker" aria-label="Continuar sua jornada na estação atual">
+      <span class="marker-disc" aria-hidden="true">
+        <svg class="marker-ico" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+          <!-- Pegadas estilizadas (duas marcas) -->
+          <ellipse cx="9" cy="14.5" rx="2.4" ry="3.3" transform="rotate(-18 9 14.5)"/>
+          <ellipse cx="15.2" cy="13.8" rx="2.1" ry="3" transform="rotate(14 15.2 13.8)"/>
+        </svg>
+      </span>
+      <span class="marker-label">Continue sua jornada</span>
+    </button>
+  </section>
+
+  <section id="screen-video" class="screen" hidden aria-label="Animação da estação">
+    <video id="video-el" playsinline preload="metadata"></video>
+  </section>
+
+  <section id="screen-cenas" class="screen" hidden aria-label="Cenas da estação">
+    <img id="cena-img" class="cena-img" alt="" decoding="async">
+    <div class="cena-footer">
+      <button type="button" class="btn-continuar" id="btn-continuar">Continuar</button>
+    </div>
+  </section>
+
+  <script>
+(function () {
+  var LS_KEY = "talmidim_mapa_flow_v1";
+
+  var CENAS = {
+    1: [
+      "1. ORANDO.png",
+      "2. ORANDO.png",
+      "3. ORANDO.png",
+      "4. ORANDO AGRADECENDO.png"
+    ],
+    2: [
+      "1. FAMÍLIA.png",
+      "2. FAMÍLIA.png",
+      "3. FAMÍLIA.png",
+      "4. FAMÍLIA.png"
+    ],
+    3: [
+      "1. EVANGELIZAÇÃO.png",
+      "2. EVANGELIZAÇÃO.png",
+      "3. EVANGELIZAÇÃO.png",
+      "4. EVANGELIZAÇÃO.png",
+      "5. EVANGELIZAÇÃO.png"
+    ],
+    4: [
+      "1. COMPAIXÃO.png",
+      "2. COMPAIXÃO.png",
+      "3. COMPAIXÃO.png",
+      "4. COMPAIXÃO.png",
+      "5. COMPAIXÃO.png"
+    ],
+    5: [
+      "1. MORDOMIA.png",
+      "2. MORDOMIA.png",
+      "3. MORDOMIA.png",
+      "4. MORDOMIA.png",
+      "5. MORDOMIA.png"
+    ],
+    6: [
+      "1. SERVIÇO CRISTÃO.png",
+      "2. SERVIÇO CRISTÃO.png",
+      "3. SERVIÇO CRISTÃO.png",
+      "4. SERVIÇO CRISTÃO.png",
+      "5. SERVIÇO CRISTÃO.png"
+    ],
+    7: [
+      "1. COMUNHÃO COM OS SANTOS.png",
+      "2. COMUNHÃO COM OS SANTOS.png",
+      "3. COMUNHÃO COM OS SANTOS.png",
+      "4. COMUNHÃO COM OS SANTOS.png",
+      "5. COMUNHÃO COM OS SANTOS.png"
+    ]
+  };
+
+  function defaultState() {
+    return { estacao: 1, fase: "map", cenaIndex: 0 };
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      if (!raw) return defaultState();
+      var o = JSON.parse(raw);
+      var est = Math.min(7, Math.max(1, parseInt(o.estacao, 10) || 1));
+      var fase = o.fase === "video" || o.fase === "cenas" || o.fase === "map" ? o.fase : "map";
+      var cenaIndex = Math.max(0, parseInt(o.cenaIndex, 10) || 0);
+      var list = CENAS[est] || [];
+      if (fase === "cenas" && cenaIndex >= list.length) {
+        fase = "map";
+        cenaIndex = 0;
+      }
+      return { estacao: est, fase: fase, cenaIndex: cenaIndex };
+    } catch (e) {
+      return defaultState();
     }
   }
-  </script>
-  <script>
-    (function () {
-      try {
-        if (localStorage.getItem("talmidim_radar_done") !== "true") {
-          window.location.replace("radar.html");
-        }
-      } catch (e) {
-        window.location.replace("radar.html");
-      }
-    })();
-  </script>
-</head>
-<body class="mapa-page">
-  <div id="mapa-container">
-    <div class="mapa-live-wrap">
-      <div class="mapa-live-breathe">
-        <img
-          class="mapa-bg"
-          src="../assets/mapa-novo.png"
-          alt=""
-        >
-      </div>
-    </div>
-    <div id="nevoa" aria-hidden="true"></div>
-    <div class="mapa-logo-float">
-      <img src="../assets/logo.png" alt="Talmidim" width="525" height="150" decoding="async">
-    </div>
-    <canvas id="peregrino-canvas" aria-hidden="true"></canvas>
-    <div class="mapa-markers" id="mapa-markers" aria-label="Estações da jornada"></div>
-    <div class="mapa-painel">
-      <p class="mapa-badge" id="mapa-badge">Dia 1 de 47</p>
-      <div class="mapa-ctx" id="mapa-ctx" hidden></div>
-      <button type="button" class="mapa-cta" id="mapa-cta">
-        Continuar jornada
-      </button>
-    </div>
-  </div>
 
-  <script type="module" src="../js/mapa-peregrino-3d.js"></script>
-  <script src="../js/mapa-ui.js"></script>
-  <script src="../js/mapa.js"></script>
+  function saveState(s) {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(s));
+    } catch (e) {}
+  }
+
+  var state = loadState();
+
+  var elMap = document.getElementById("screen-map");
+  var elVideo = document.getElementById("screen-video");
+  var elCenas = document.getElementById("screen-cenas");
+  var marker = document.getElementById("marker");
+  var videoEl = document.getElementById("video-el");
+  var cenaImg = document.getElementById("cena-img");
+  var btnContinuar = document.getElementById("btn-continuar");
+
+  function showOnly(which) {
+    elMap.hidden = which !== "map";
+    elVideo.hidden = which !== "video";
+    elCenas.hidden = which !== "cenas";
+  }
+
+  function videoUrl(n) {
+    return "../assets/videos/animacao-e" + n + ".mp4";
+  }
+
+  function cenaUrl(estacao, filename) {
+    return "../assets/cenas/e" + estacao + "/" + encodeURIComponent(filename);
+  }
+
+  function applyMarkerPosition() {
+    var n = state.estacao;
+    marker.className = "marker-wrap pos-e" + n;
+  }
+
+  function showMap() {
+    state.fase = "map";
+    saveState(state);
+    applyMarkerPosition();
+    showOnly("map");
+    videoEl.removeAttribute("src");
+    videoEl.load();
+  }
+
+  function playVideo() {
+    state.fase = "video";
+    saveState(state);
+    showOnly("video");
+    videoEl.controls = false;
+    videoEl.disablePictureInPicture = true;
+    videoEl.setAttribute("controlsList", "nodownload noremoteplayback");
+    var url = videoUrl(state.estacao);
+    videoEl.src = url;
+    videoEl.play().catch(function () {
+      showMap();
+    });
+  }
+
+  function showCenaAtIndex() {
+    var list = CENAS[state.estacao];
+    if (!list || !list.length) {
+      showMap();
+      return;
+    }
+    var idx = state.cenaIndex;
+    if (idx < 0) idx = 0;
+    if (idx >= list.length) idx = list.length - 1;
+    state.cenaIndex = idx;
+    saveState(state);
+    cenaImg.src = cenaUrl(state.estacao, list[idx]);
+  }
+
+  function enterCenas() {
+    state.fase = "cenas";
+    if (state.cenaIndex < 0) state.cenaIndex = 0;
+    saveState(state);
+    showOnly("cenas");
+    showCenaAtIndex();
+  }
+
+  function onVideoEnded() {
+    state.cenaIndex = 0;
+    enterCenas();
+  }
+
+  function onContinuar() {
+    var list = CENAS[state.estacao];
+    if (!list || !list.length) {
+      showMap();
+      return;
+    }
+    if (state.cenaIndex < list.length - 1) {
+      state.cenaIndex++;
+      saveState(state);
+      showCenaAtIndex();
+      return;
+    }
+    var est = state.estacao;
+    if (est < 7) {
+      state.estacao = est + 1;
+      state.cenaIndex = 0;
+      state.fase = "map";
+      saveState(state);
+      applyMarkerPosition();
+      showMap();
+    } else {
+      state.cenaIndex = 0;
+      state.fase = "map";
+      saveState(state);
+      applyMarkerPosition();
+      showMap();
+    }
+  }
+
+  marker.addEventListener("click", function () {
+    if (state.fase !== "map") return;
+    playVideo();
+  });
+
+  videoEl.addEventListener("ended", onVideoEnded);
+
+  btnContinuar.addEventListener("click", function () {
+    if (state.fase !== "cenas") return;
+    onContinuar();
+  });
+
+  function boot() {
+    applyMarkerPosition();
+    if (state.fase === "video") {
+      showOnly("video");
+      videoEl.controls = false;
+      videoEl.src = videoUrl(state.estacao);
+      videoEl.play().catch(function () {
+        state.fase = "map";
+        saveState(state);
+        showMap();
+      });
+      return;
+    }
+    if (state.fase === "cenas") {
+      showOnly("cenas");
+      showCenaAtIndex();
+      return;
+    }
+    showMap();
+  }
+
+  boot();
+})();
+  </script>
 </body>
 </html>
